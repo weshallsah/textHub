@@ -16,7 +16,7 @@ class _SndState extends State<Snd> {
   void sndmassage(){
     
     _controller.clear();
-    FirebaseFirestore.instance.collection('Chat/kisG0jdsp3XfRnndCVTD/Massage').add({'Text':entermassage});
+    FirebaseFirestore.instance.collection('Chat').add({'Text':entermassage});
   }
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:chatbot/component/chats/massage.dart';
 import 'package:chatbot/screen/ChatBox.dart';
 import 'package:chatbot/screen/authscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +22,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    
+
     return MaterialApp(
       home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),builder: (context, snapshot){
         if(snapshot.hasData){
