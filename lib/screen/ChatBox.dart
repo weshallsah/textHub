@@ -1,7 +1,8 @@
-
+import 'package:chatbot/component/chats/massage.dart';
+import 'package:chatbot/component/chats/send.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 
 class ChatBox extends StatelessWidget {
   const ChatBox({super.key});
@@ -10,37 +11,44 @@ class ChatBox extends StatelessWidget {
   Widget build(BuildContext context) {
     // Firebase.initializeApp();
     return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Chat/kisG0jdsp3XfRnndCVTD/Massage')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          // ignore: non_constant_identifier_names
-          final Documents = snapshot.data?.docs;
-          return ListView.builder(
-            itemCount: Documents?.length,
-            itemBuilder: (context, index) => Container(
-              child: Text(
-                Documents![index]['Text'],
-                style: const TextStyle(fontSize: 28),
-              ),
+        appBar: AppBar(
+          title: const Text('Chat'),
+          actions: [
+            DropdownButton(
+              icon: const Icon(Icons.more_vert),
+              onChanged: (itemidentifier) {
+                if (itemidentifier == 'Logout') {
+                  FirebaseAuth.instance.signOut();
+                }
+              },
+              items: [
+                DropdownMenuItem(
+                  value: 'Logout',
+                  child: Container(
+                    child: Row(
+                      children: const [
+                        Icon(Icons.exit_to_app),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text('Logout',style: TextStyle(color: Colors.white),),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          FirebaseFirestore.instance
-              .collection('Chat/kisG0jdsp3XfRnndCVTD/Massage')
-              .add({'Text': 'Kya bolti public!'});
-        },
-        child:const Icon(Icons.send),
-      ),
-    );
+          ],
+        ),
+        body: Container(
+          child: Column(
+            children: const [
+              Expanded(
+                child: Massage(),
+              ),
+              Snd(),
+            ],
+          ),
+        ));
   }
 }
