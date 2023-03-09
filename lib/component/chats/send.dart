@@ -10,14 +10,15 @@ class Snd extends StatefulWidget {
 }
 
 class _SndState extends State<Snd> {
-
   final _controller = new TextEditingController();
-  late var entermassage ='';
-  void sndmassage(){
-    
+  late var entermassage = '';
+  void sndmassage() {
     _controller.clear();
-    FirebaseFirestore.instance.collection('Chat').add({'Text':entermassage});
+    FirebaseFirestore.instance
+        .collection('Chat')
+        .add({'Text': entermassage, 'Createdat': Timestamp.now()});
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +28,6 @@ class _SndState extends State<Snd> {
         children: [
           Expanded(
             child: TextField(
-              
               decoration: const InputDecoration(
                 labelText: '...',
               ),
@@ -39,8 +39,9 @@ class _SndState extends State<Snd> {
               controller: _controller,
             ),
           ),
-          IconButton(onPressed: entermassage.trim().isEmpty ? null : sndmassage
-          , icon:const Icon(Icons.send))
+          IconButton(
+              onPressed: entermassage.trim().isEmpty ? null : sndmassage,
+              icon: const Icon(Icons.send))
         ],
       ),
     );

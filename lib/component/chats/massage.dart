@@ -7,7 +7,7 @@ class Massage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('Chat').snapshots(),
+      stream: FirebaseFirestore.instance.collection('Chat').orderBy('Createdat',descending: true).snapshots(),
       builder: (context, chatsnapshot) {
         if (chatsnapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -22,7 +22,7 @@ class Massage extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
             ),
-          ),
+          ),reverse: true,
         );
       },
     );
