@@ -1,4 +1,5 @@
 import 'package:chatbot/component/auth.dart';
+import 'package:chatbot/component/chats/massage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _auth = FirebaseAuth.instance;
   bool isloading = false;
+  var errmassage = "";
 
   void _submitForm(
       String email, String password, String username, bool islogin) async {
@@ -37,21 +39,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
       }
     } on PlatformException catch (err) {
-      String massage = "An error please the credential!";
+      // errmassage="faillogin";
       if (err.message != null) {
-        massage = err.message as String;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(massage!),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-      setState(() {
-        isloading = true;
-      });
+        errmassage = err.message as String;
+      }  
     } catch (err) {
       print(err);
+      setState(() {
+        isloading = !isloading;
+      });
     }
   }
 
@@ -73,7 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
       home: Scaffold(
-        body: Authfrom(_submitForm, isloading),
+        body: Authfrom(_submitForm, isloading,errmassage),
       ),
     );
   }

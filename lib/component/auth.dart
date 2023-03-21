@@ -3,27 +3,33 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class Authfrom extends StatefulWidget {
   bool isloading;
-  final void Function(String email,String password,String username,bool islogin) submitfm;
-  Authfrom(this.submitfm,this.isloading);
+  var errmassage;
+  final void Function(
+      String email, String password, String username, bool islogin) submitfm;
+  Authfrom(this.submitfm, this.isloading, this.errmassage);
   @override
   State<Authfrom> createState() => _AuthfromState();
 }
 
 class _AuthfromState extends State<Authfrom> {
   final _formkey = GlobalKey<FormState>();
-  var _islogin=true;
-  var _Username='';
-  var _password='';
-  var _Email='';
+  var _islogin = true;
+  var _Username = '';
+  var _password = '';
+  var _Email = '';
 
-  void _trysumbmit(){
+  void _trysumbmit() {
     final isvalid = _formkey.currentState?.validate();
     FocusScope.of(context).unfocus();
 
-
-    if(isvalid as bool ){
-        _formkey.currentState?.save();
-       widget.submitfm(_Email,_password,_Username,_islogin,);
+    if (isvalid as bool) {
+      _formkey.currentState?.save();
+      widget.submitfm(
+        _Email,
+        _password,
+        _Username,
+        _islogin,
+      );
     }
   }
 
@@ -42,13 +48,12 @@ class _AuthfromState extends State<Authfrom> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  
                   TextFormField(
                     // controller: _Email,
                     key: const ValueKey('Email'),
                     validator: (value) {
-                      if(value ==null || !value.contains('@')){
-                          return 'please enter valid email';
+                      if (value == null || !value.contains('@')) {
+                        return 'please enter valid email';
                       }
                       return null;
                     },
@@ -56,62 +61,81 @@ class _AuthfromState extends State<Authfrom> {
                     decoration: const InputDecoration(
                         labelText: 'Email@gmail.com',
                         labelStyle: TextStyle(fontSize: 28)),
-                        onSaved: (Value) => _Email=Value as String,
+                    onSaved: (Value) => _Email = Value as String,
                   ),
-
-                  if(!_islogin)
-                  TextFormField(
-                    // controller: _Username,
-                    key: const ValueKey('username'),
-                    validator: (value) {
-                      if(value == null||value.length < 7){
+                  if (!_islogin)
+                    TextFormField(
+                      // controller: _Username,
+                      key: const ValueKey('username'),
+                      validator: (value) {
+                        if (value == null || value.length < 7) {
                           return 'please enter username';
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                        labelText: 'Username',
-                        labelStyle: TextStyle(fontSize: 28)),
-                    onSaved: (Value) => _Username =Value as String,
-                  ),
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                          labelText: 'Username',
+                          labelStyle: TextStyle(fontSize: 28)),
+                      onSaved: (Value) => _Username = Value as String,
+                    ),
                   TextFormField(
                     // controller: _password,
                     key: const ValueKey('password'),
                     validator: (value) {
-                      if(value ==null || value.length < 8){
-                          return 'password is to short';
+                      if (value == null || value.length < 8) {
+                        return 'password is to short';
                       }
                       return null;
                     },
                     decoration: const InputDecoration(
                         labelText: 'password',
                         labelStyle: TextStyle(fontSize: 28)),
-                    onSaved: (Value) => _password=Value as String,
+                    onSaved: (Value) => _password = Value as String,
                   ),
                   const SizedBox(
                     height: 18,
                   ),
-                  if(widget.isloading)
-                    CircularProgressIndicator(),
-                  
-                  if(!widget.isloading)
-                  ElevatedButton(
-                    onPressed: _trysumbmit,
-                    child:  Text(_islogin ?'Login':'Signup',style: const TextStyle(fontSize: 28),),
-                  ),
-
-                  if(!widget.isloading)                  
-                  TextButton(
+                  if (widget.isloading) const CircularProgressIndicator(),
+                  if (!widget.isloading)
+                    ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          _islogin = !_islogin;
-                        });
-                        
+                        _trysumbmit();
+                        if (widget.errmassage == "faillogin") {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text(
+                              "please enter valid credential",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ));
+                        } else if (widget.errmassage != null) {
+                          var _massage=widget.errmassage;
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              _massage,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ));
+                        }
                       },
                       child: Text(
-                        _islogin?"Don't have account":"i have account",
-                        style:const  TextStyle(fontSize: 18),
-                      ))
+                        _islogin ? 'Login' : 'Signup',
+                        style: const TextStyle(fontSize: 28),
+                      ),
+                    ),
+                  if (!widget.isloading)
+                    TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _islogin = !_islogin;
+                          });
+                        },
+                        child: Text(
+                          _islogin ? "Don't have account" : "i have account",
+                          style: const TextStyle(fontSize: 18),
+                        ))
                 ],
               ),
             ),

@@ -1,4 +1,6 @@
+import 'package:chatbot/component/chats/massagepop.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Massage extends StatelessWidget {
@@ -6,23 +8,37 @@ class Massage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('Chat').orderBy('Createdat',descending: true).snapshots(),
-      builder: (context, chatsnapshot) {
-        if (chatsnapshot.connectionState == ConnectionState.waiting) {
+    return FutureBuilder(
+      future: Future(() async => await FirebaseAuth.instance),
+      builder: (context, futursnapshot) {
+        if (futursnapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        final docmassage = chatsnapshot.data?.docs;
-        return ListView.builder(
-          itemCount: docmassage?.length,
-          itemBuilder: (context, index) => Text(
-            docmassage?[index]['Text'],
-            style: const TextStyle(
-              fontSize: 20,
-            ),
-          ),reverse: true,
+        final docuid= futursnapshot.data?.currentUser;
+        return StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Chat')
+              .orderBy('Createdat', descending: true)
+              .snapshots(),
+          builder: (context, chatsnapshot) {
+            if (chatsnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final docmassage = chatsnapshot.data?.docs;
+            return ListView.builder(
+              itemCount: docmassage?.length,
+              itemBuilder: (context, index) =>
+                  massagePop(docmassage?[index]['Text'],
+                  docmassage?[index]['Username'],
+                  docmassage?[index]['UserId']==docuid?.uid?true:false,
+                  ),
+              reverse: true,
+            );
+          },
         );
       },
     );

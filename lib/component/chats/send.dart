@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,13 +11,22 @@ class Snd extends StatefulWidget {
 }
 
 class _SndState extends State<Snd> {
+  
+  
   final _controller = new TextEditingController();
   late var entermassage = '';
-  void sndmassage() {
+  
+  
+  void sndmassage() async{
+    final auth = await FirebaseAuth.instance.currentUser;
+    final user=await FirebaseFirestore.instance.collection('user').doc(auth?.uid).get();
     _controller.clear();
-    FirebaseFirestore.instance
-        .collection('Chat')
-        .add({'Text': entermassage, 'Createdat': Timestamp.now()});
+    FirebaseFirestore.instance.collection('Chat').add({
+      'Text': entermassage,
+      'Createdat': Timestamp.now(),
+      'UserId': auth?.uid,
+      'Username': user['Username'],
+    });
   }
 
   @override

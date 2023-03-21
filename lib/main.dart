@@ -1,4 +1,6 @@
 import 'package:chatbot/component/chats/massage.dart';
+import 'package:chatbot/component/profile/profile.dart';
+import 'package:chatbot/component/profile/userdetial.dart';
 import 'package:chatbot/screen/ChatBox.dart';
 import 'package:chatbot/screen/authscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,24 +15,37 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
+  
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _isprofile = false;
+  void getinfo(bool isprofile){
+    setState(() {
+      _isprofile= isprofile ;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     
 
-    return MaterialApp(
-      home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),builder: (context, snapshot){
-        if(snapshot.hasData){
-          return const ChatBox();
-        }
-        return const RegisterScreen();
-      }),
+    return  MaterialApp(
+      home:profilPage(),
+      
+      //  StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),builder: (context, snapshot){
+      //   if(snapshot.hasData){
+      //     // if(_isprofile){
+      //     //   return profile();
+      //     // }
+      //     return chatBox(getinfo);
+      //   }
+      //   return const RegisterScreen();
+      // }),
     );
   }
+  
+ 
 }
