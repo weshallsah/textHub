@@ -1,24 +1,28 @@
-import 'dart:ffi';
 
 import 'package:chatbot/component/chats/massage.dart';
 import 'package:chatbot/component/chats/send.dart';
+import 'package:chatbot/component/profile/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class chatBox extends StatefulWidget {
-  
-  final void Function (bool _isprofile) clicked;
-  chatBox(this.clicked);
+  chatBox();
 
   @override
   State<chatBox> createState() => _chatBoxState();
 }
 
 class _chatBoxState extends State<chatBox> {
+  // TextEditingController UserName=TextEditingController();
+  var username;
 
-  void tryclicked(){
-    widget.clicked(true);
+  @override
+  void initState(){
+    super.initState();
+    final _auth = FirebaseAuth.instance.currentUser;
+    final user= FirebaseFirestore.instance.collection('user').doc(_auth?.uid).get().then((value) => username=value['Username']);
   }
 
   @override
@@ -63,21 +67,21 @@ class _chatBoxState extends State<chatBox> {
           // backgroundColor: const Color.fromRGBO(50, 75, 205, 1),
           child: ListView(children: [
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 142, 196, 240)),
               child: Column(
-                children: const [
+                children:  [
                   SizedBox(height: 5),
-                  Center(
+                  const Center(
                     child: CircleAvatar(
                       radius: 40,
                       // backgroundImage: AssetImage('assets/img.jpg'),
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text("one_direction_vishal",
+                  Text(username??"username",
                       style: TextStyle(fontSize: 20, color: Colors.white)),
-                  Text("vishalk74064@gmail.com",
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
+                  // Text("vishalk74064@gmail.com",
+                  //     style: TextStyle(fontSize: 16, color: Colors.white)),
                 ],
               ),
             ),
@@ -88,7 +92,15 @@ class _chatBoxState extends State<chatBox> {
               leading: const Icon(Icons.person),
               title: const Text('My Profile',
                   style: TextStyle(color: Colors.black)),
-              onTap: tryclicked,
+              onTap: () {
+                // Within the `FirstRoute` widget
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => profilPage(),
+                  ),
+                );
+              },
             ),
             ListTile(
               iconColor: Colors.blueAccent,

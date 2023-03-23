@@ -1,9 +1,10 @@
 import 'package:chatbot/component/auth.dart';
-import 'package:chatbot/component/chats/massage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,15 +15,34 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _auth = FirebaseAuth.instance;
-  bool isloading = false;
-  var errmassage = "";
+  var isloading = false;
 
-  void _submitForm(
-      String email, String password, String username, bool islogin) async {
+  // ignore: non_constant_identifier_names
+  void uploadimg(File? ProfImg) async {
+    if (ProfImg != null) {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('Profile_Img')
+          .child('${_auth.currentUser?.uid}.jpg');
+      await ref.putFile(ProfImg);
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(_auth.currentUser?.uid)
+          .set(
+        {
+          'ProfImgurl': ref.getDownloadURL(),
+        },
+      );
+    }
+  }
+
+  void _submitForm(String email, String password, String username, bool islogin,
+      File? Img) async {
+    // ignore: non_constant_identifier_names
     UserCredential Futher;
     try {
       setState(() {
-        isloading = true;
+        isloading = !isloading;
       });
       if (islogin) {
         Futher = await _auth.signInWithEmailAndPassword(
@@ -30,24 +50,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         Futher = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
+
         await FirebaseFirestore.instance
             .collection('user')
             .doc(Futher.user?.uid)
-            .set({
-          'Username': username,
-          'Email': email,
-        });
+            .set(
+          {
+            'Username': username,
+            'Email': email,
+          },
+        );
+        uploadimg(Img);
       }
     } on PlatformException catch (err) {
-      // errmassage="faillogin";
+      // ignore: unused_local_variable
+      var errMassage = "please enter valid cerdential";
       if (err.message != null) {
-        errmassage = err.message as String;
-      }  
+        errMassage = err.message as String;
+      }
     } catch (err) {
+      // ignore: avoid_print
       print(err);
-      setState(() {
-        isloading = !isloading;
-      });
     }
   }
 
@@ -55,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.deepPurple.shade200,
+        scaffoldBackgroundColor: Colors.white,
         brightness: Brightness.light,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -69,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
       home: Scaffold(
-        body: Authfrom(_submitForm, isloading,errmassage),
+        body: Authfrom(_submitForm, isloading),
       ),
     );
   }
