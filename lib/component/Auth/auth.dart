@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace
+// ignore_for_file: sized_box_for_whitespace, use_key_in_widget_constructors
 
 import 'dart:io';
 
@@ -6,9 +6,11 @@ import 'package:chatbot/component/profile/imagepicker.dart';
 import 'package:flutter/material.dart';
 
 class Authfrom extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final isloading;
 
   final void Function(String email, String password, String username,
+      // ignore: non_constant_identifier_names
       bool islogin, File? ProfImg) submitfm;
 
   const Authfrom(this.submitfm, this.isloading);
@@ -20,8 +22,12 @@ class _AuthfromState extends State<Authfrom> {
   final _formkey = GlobalKey<FormState>();
   var _islogin = true;
   var _password="";
+  // ignore: non_constant_identifier_names
   var _Username="";
+  // ignore: non_constant_identifier_names
   var _Email="";
+  // prefer_typing_uninitialized_variables
+  // ignore: prefer_typing_uninitialized_variables
   var _ProfImg;
 
   void _getImg(File image){

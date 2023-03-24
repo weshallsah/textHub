@@ -9,6 +9,7 @@ class Massage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
+      // ignore: await_only_futures
       future: Future(() async => await FirebaseAuth.instance),
       builder: (context, futursnapshot) {
         if (futursnapshot.connectionState == ConnectionState.waiting) {

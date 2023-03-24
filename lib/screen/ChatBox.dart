@@ -1,4 +1,3 @@
-
 import 'package:chatbot/component/chats/massage.dart';
 import 'package:chatbot/component/chats/send.dart';
 import 'package:chatbot/component/profile/profile.dart';
@@ -15,15 +14,14 @@ class chatBox extends StatefulWidget {
 }
 
 class _chatBoxState extends State<chatBox> {
-  // TextEditingController UserName=TextEditingController();
-  var username;
-
-  @override
-  void initState(){
-    super.initState();
-    final _auth = FirebaseAuth.instance.currentUser;
-    final user= FirebaseFirestore.instance.collection('user').doc(_auth?.uid).get().then((value) => username=value['Username']);
-  }
+  // String Username="";
+  // String Url="";
+  // void getdata(String url,String username){
+  //   setState(() {
+  //     Username=username;
+  //     Url=url;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,18 +65,22 @@ class _chatBoxState extends State<chatBox> {
           // backgroundColor: const Color.fromRGBO(50, 75, 205, 1),
           child: ListView(children: [
             DrawerHeader(
-              decoration: BoxDecoration(color: Color.fromARGB(255, 142, 196, 240)),
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 142, 196, 240)),
               child: Column(
-                children:  [
+                children: const [
                   SizedBox(height: 5),
-                  const Center(
+                  Center(
                     child: CircleAvatar(
                       radius: 40,
                       // backgroundImage: AssetImage('assets/img.jpg'),
+                      backgroundImage: NetworkImage(
+                          'https://yt3.googleusercontent.com/L-VcJu3z5XRs3ZHk5dsAon9SG0zu_DlrVvwnuXL1ke2Yq-7QC2NJxFXDTT-5SXydrSY9hMEKjA=s900-c-k-c0x00ffffff-no-rj',
+                        ),
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text(username??"username",
+                  Text("Username",
                       style: TextStyle(fontSize: 20, color: Colors.white)),
                   // Text("vishalk74064@gmail.com",
                   //     style: TextStyle(fontSize: 16, color: Colors.white)),
@@ -97,7 +99,7 @@ class _chatBoxState extends State<chatBox> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => profilPage(),
+                    builder: (context) => profilePage(),
                   ),
                 );
               },

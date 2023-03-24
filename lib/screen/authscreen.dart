@@ -1,4 +1,6 @@
-import 'package:chatbot/component/auth.dart';
+import 'dart:async';
+
+import 'package:chatbot/component/Auth/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,23 +20,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var isloading = false;
 
   // ignore: non_constant_identifier_names
-  void uploadimg(File? ProfImg) async {
-    if (ProfImg != null) {
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('Profile_Img')
-          .child('${_auth.currentUser?.uid}.jpg');
-      await ref.putFile(ProfImg);
-      await FirebaseFirestore.instance
-          .collection('user')
-          .doc(_auth.currentUser?.uid)
-          .set(
-        {
-          'ProfImgurl': ref.getDownloadURL(),
-        },
-      );
-    }
-  }
 
   void _submitForm(String email, String password, String username, bool islogin,
       File? Img) async {
@@ -51,6 +36,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Futher = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('Prof_Img')
+            .child('${Futher.user?.uid}.jpg');
+        var imgurl;
+        UploadTask uploadTask = ref.putFile(Img!);
+        await uploadTask.whenComplete(() async {
+          imgurl = await ref.getDownloadURL();
+          print("complete");
+          // return Future.delayed(
+          //   const Duration(minutes: 1),
+          // );
+        });
+
         await FirebaseFirestore.instance
             .collection('user')
             .doc(Futher.user?.uid)
@@ -58,9 +57,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           {
             'Username': username,
             'Email': email,
+            'profile_img_url':imgurl,
           },
-        );
-        uploadimg(Img);
+        ).whenComplete(() => null);
+        // uploadimg(Img);
       }
     } on PlatformException catch (err) {
       // ignore: unused_local_variable

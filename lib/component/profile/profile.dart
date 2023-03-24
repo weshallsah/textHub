@@ -1,151 +1,151 @@
-import 'package:chatbot/screen/ChatBox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
-class profilPage extends StatefulWidget {
-  const profilPage();
+class profilePage extends StatefulWidget {
+  // final void Function(String url, String username) sndurser;
+  profilePage();
 
   @override
-  State<profilPage> createState() => _profilPageState();
+  State<profilePage> createState() => _profilePageState();
 }
 
-String? profilepic;
-
-class _profilPageState extends State<profilPage> {
+class _profilePageState extends State<profilePage> {
   TextEditingController userName = TextEditingController();
   TextEditingController userEmail = TextEditingController();
-  TextEditingController profurl = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
-  var username;
-  var useremail;
-
+  TextEditingController userpic = TextEditingController();
+//   final url =
+  // 'https://i.pinimg.com/originals/17/66/56/1766569ede614813665828719d0872e6.jpg';
+  var url;
+  var Username;
+  var Email;
+  final _auth = FirebaseAuth.instance.currentUser;
+  final database = FirebaseFirestore.instance.collection('user');
+  @override
   void initState() {
-    super.initState();
-    final _auth = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
-        .collection('user')
-        .doc(_auth?.uid)
-        .get()
-        .then((value) {
-      userEmail.text = value['Email'];
+    database.doc(_auth?.uid).get().then((value) {
       userName.text = value['Username'];
-      profurl.text=value['ImgUrl'];
+      userpic.text = value['profile_img_url'];
+      userEmail.text = value['Email'];
     });
-    username = userName.text;
-    useremail = userEmail.text;
+    url = userpic.text;
+    Username = userName.text;
+    Email = userEmail.text;
+    super.initState();
+    // widget.sndurser(url, Username);
   }
 
-  void editfm(String userName, String userEmail) async {
-    final _auth = await FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance.collection('user').doc(_auth?.uid).update({
-      'Username': userName,
-      'Email': userEmail,
-    });
-    if (useremail != userEmail) {
-      _auth?.updateEmail(userEmail);
+  void edit() {
+    if (userEmail.text != Username || userName.text != Email) {
+      database.doc(_auth?.uid).update(
+        {
+          'Username': userName.text,
+          'Email': userEmail.text,
+        },
+      );
     }
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "profile was update",
-        ),
-      ),
-    );
+  }
+
+  void imagepck(var Sources) async {
+    final Future<XFile?> pkgImg;
+    if (Sources == "gallery") {
+      pkgImg = ImagePicker().pickImage(source: ImageSource.camera);
+    } else {
+      pkgImg = ImagePicker().pickImage(source: ImageSource.camera);
+    }
+
+    // final  ref = FirebaseStorage.instance.ref().child('Prof_Img').child(userpic.text);
+    // await ref.writeToFile(pkgImg).whenComplete(()async{
+    // final userurl=ref.getDownloadURL();
+    // userpic.text=userurl as String;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              alignment: Alignment.bottomLeft,
-              height: 70,
-              // color: Colors.blueGrey,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    padding: const EdgeInsets.only(left: 16),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      size: 30,
-                    ),
+        height: double.infinity,
+        width: double.infinity,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 18, top: 20),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    size: 30,
                   ),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  const Text(
-                    "Profile",
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  ),
-                ],
+                ),
               ),
-            ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              height: 180,
-              child: const CircleAvatar(
-                radius: 70,
-                backgroundColor: Colors.blueGrey,
-                // child: Image(
-                //   image: NetworkImage(
-                //     'https://drive.google.com/file/d/1mPAkuooe8x8b-71mGGejs8BgHJZqhRt5/view?usp=share_link',
-                //   ),
-                // ),
+              Container(
+                width: 150.0,
+                height: 150.0,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(userpic.text),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Form(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                height: 40,
+                alignment: Alignment.center,
+                // color: Colors.amber,
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.image,
+                      size: 28,
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        "Edit image",
+                        style: TextStyle(color: Colors.blueGrey, fontSize: 20),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Container(
+                width: double.infinity,
+                // color: Colors.amber,
+                child: Column(
                   children: [
                     Container(
-                      alignment: Alignment.center,
-                      height: 60,
-                      width: 350,
+                      padding: EdgeInsets.all(15),
                       child: TextFormField(
                         controller: userName,
-                        validator: (value) {
-                          if (value == null || value.length < 7) {
-                            return "please enter username";
-                          }
-                          return null;
-                        },
-                        style: const TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
                         textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
+                          hintText: "username",
+                          // contentPadding: const EdgeInsets.only(
+                          //   bottom: 10,
+                          // ),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20),
+                            gapPadding: 10,
+                            borderRadius: BorderRadius.circular(
+                              20,
                             ),
                           ),
-                          // labelStyle: TextStyle(fontSize: 22),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      height: 60,
-                      width: 350,
-                      child: TextFormField(
-                        textAlign: TextAlign.center,
-                        controller: userEmail,
+                        cursorHeight: 30,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
                         validator: (value) {
                           if (value == null ||
                               !value.contains("@") ||
@@ -154,54 +154,66 @@ class _profilPageState extends State<profilPage> {
                           }
                           return null;
                         },
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                        decoration: const InputDecoration(
-                          // helperText: "One_direction_vishal",
-                          // hintText: "vishalk74064@gmail.com",
-                          hintStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        // onSaved: (newValue) {
+                        //   _Email = newValue as String;
+                        // },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      child: TextFormField(
+                        controller: userEmail,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: "Email",
+                          // contentPadding: const EdgeInsets.only(
+                          //   bottom: 10,
+                          // ),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20),
+                            gapPadding: 10,
+                            borderRadius: BorderRadius.circular(
+                              20,
                             ),
                           ),
                         ),
-                        // onSaved: (newValue) => useremail=newValue,
+                        cursorHeight: 30,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                        validator: (value) {
+                          if (value == null ||
+                              !value.contains("@") ||
+                              !value.contains(".")) {
+                            return "please enter valid email";
+                          }
+                          return null;
+                        },
+                        // onSaved: (newValue) {
+                        //   _Email = newValue as String;
+                        // },
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    // const SizedBox(height: 180),
+                    Text(userpic.text),
                     Container(
+                      width: 250,
                       height: 50,
-                      width: 200,
                       decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(30)),
+                          color: Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(25)),
                       child: TextButton(
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          final isvalid = _formkey.currentState?.validate();
-                          if (isvalid != null) {
-                            _formkey.currentState?.save();
-                          }
-                          editfm(userName.text, userEmail.text);
-                        },
+                        onPressed: () {},
                         child: const Text(
-                          "Save",
-                          style: TextStyle(fontSize: 28, color: Colors.white),
+                          "save",
+                          style: TextStyle(color: Colors.white, fontSize: 24),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
