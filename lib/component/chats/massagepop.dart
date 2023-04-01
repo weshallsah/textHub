@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 class massagePop extends StatelessWidget {
   final _Massage;
   final _username;
+  final _photourl;
   final _isme;
-  const massagePop(this._Massage, this._username, this._isme);
+  const massagePop(this._Massage, this._username, this._isme,this._photourl);
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +27,9 @@ class massagePop extends StatelessWidget {
             mainAxisAlignment:
                 _isme ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              const CircleAvatar(
+               CircleAvatar(
                 backgroundColor: Colors.grey,
+                foregroundImage: NetworkImage(_photourl),
                 radius: 18,
               ),
               const SizedBox(

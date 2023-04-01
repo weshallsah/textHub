@@ -22,15 +22,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: profilePage(),
-      //  StreamBuilder(
-      //     stream: FirebaseAuth.instance.authStateChanges(),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.hasData) {
-      //         return chatBox();
-      //       }
-      //       return const RegisterScreen();
-      //     }),
+      home: 
+       StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return chatBox();
+            }
+            return const RegisterScreen();
+          }),
     );
   }
 }

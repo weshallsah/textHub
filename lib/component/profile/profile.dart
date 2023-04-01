@@ -1,66 +1,128 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class profilePage extends StatefulWidget {
-  // final void Function(String url, String username) sndurser;
-  profilePage();
+  final void Function(bool isEdit) _isedited;
+  profilePage(this._isedited);
 
   @override
   State<profilePage> createState() => _profilePageState();
 }
 
 class _profilePageState extends State<profilePage> {
-  TextEditingController userName = TextEditingController();
+  final url = '';
+  File? ProfImage;
+  TextEditingController Username = TextEditingController();
   TextEditingController userEmail = TextEditingController();
-  TextEditingController userpic = TextEditingController();
-//   final url =
-  // 'https://i.pinimg.com/originals/17/66/56/1766569ede614813665828719d0872e6.jpg';
-  var url;
-  var Username;
-  var Email;
-  final _auth = FirebaseAuth.instance.currentUser;
-  final database = FirebaseFirestore.instance.collection('user');
+  String? userName = '';
+  String? Useremail = '';
+  String? profilimage = '';
+
+  Future getData() async {
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then(
+      (snapshot) async {
+        if (snapshot.exists) {
+          setState(() {
+            userName = snapshot.data()!['Username'];
+            Username.text = snapshot.data()!['Username'];
+            Useremail = snapshot.data()!['Email'];
+            userEmail.text = snapshot.data()!['Email'];
+            profilimage = snapshot.data()!['profile_img_url'];
+          });
+        }
+      },
+    );
+  }
+
   @override
   void initState() {
-    database.doc(_auth?.uid).get().then((value) {
-      userName.text = value['Username'];
-      userpic.text = value['profile_img_url'];
-      userEmail.text = value['Email'];
-    });
-    url = userpic.text;
-    Username = userName.text;
-    Email = userEmail.text;
+    // TODO: implement initState
+    getData();
     super.initState();
-    // widget.sndurser(url, Username);
   }
 
-  void edit() {
-    if (userEmail.text != Username || userName.text != Email) {
-      database.doc(_auth?.uid).update(
-        {
-          'Username': userName.text,
-          'Email': userEmail.text,
-        },
-      );
-    }
-  }
-
-  void imagepck(var Sources) async {
-    final Future<XFile?> pkgImg;
-    if (Sources == "gallery") {
-      pkgImg = ImagePicker().pickImage(source: ImageSource.camera);
+  void imagepck(String? _Source) async {
+    var newUrl="";
+    if (_Source == "gallery") {
+      final pickedimgfile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      setState(() {
+        ProfImage = File(pickedimgfile!.path);
+      });
     } else {
-      pkgImg = ImagePicker().pickImage(source: ImageSource.camera);
+      final pickedimgfile =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+      setState(() {
+        ProfImage = File(pickedimgfile!.path);
+      });
     }
+    try {
+      // final ref;
+      if (profilimage != "") {
+        final ref = FirebaseStorage.instance.refFromURL(profilimage!);
+        UploadTask uploadTask = ref.putFile(ProfImage!);
+        await uploadTask.whenComplete(() async {
+          newUrl = await ref.getDownloadURL();
+          print("complete");
+        });
+      } else {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('Prof_Img')
+            .child('${FirebaseAuth.instance.currentUser?.uid}.jpg');
+        UploadTask uploadTask = ref.putFile(ProfImage!);
+        await uploadTask.whenComplete(() async {
+          newUrl = await ref.getDownloadURL();
+          print("complete");
+        });
+      }
 
-    // final  ref = FirebaseStorage.instance.ref().child('Prof_Img').child(userpic.text);
-    // await ref.writeToFile(pkgImg).whenComplete(()async{
-    // final userurl=ref.getDownloadURL();
-    // userpic.text=userurl as String;
-    // });
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .update({'profile_img_url': newUrl});
+    } on PlatformException catch (err) {
+      String? massage = "something went wrong";
+      if (err.message != null) {
+        massage = err.message;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(massage as String),
+        ),
+      );
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  void editProfile() async {
+    if (Useremail != userEmail.text || userName != Username.text) {
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .update({
+        'Username': Username.text,
+        'Email': userEmail.text,
+      }).whenComplete(() async {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Profile was update"),
+          ),
+        );
+      });
+      widget._isedited(true);
+    }
   }
 
   @override
@@ -86,10 +148,16 @@ class _profilePageState extends State<profilePage> {
                 ),
               ),
               Container(
-                width: 150.0,
-                height: 150.0,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(userpic.text),
+                  radius: 80,
+                  backgroundColor: Colors.blueGrey,
+                  child: CircleAvatar(
+                    radius: 78,
+                    foregroundImage: ProfImage!=null?FileImage(ProfImage!):null,
+                    backgroundImage: profilimage != null
+                        ? NetworkImage(profilimage!)
+                        : NetworkImage(url),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -108,10 +176,107 @@ class _profilePageState extends State<profilePage> {
                       size: 28,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showGeneralDialog(
+                          barrierLabel: "Label",
+                          barrierDismissible: true,
+                          barrierColor: Colors.black.withOpacity(0.5),
+                          transitionDuration: Duration(milliseconds: 700),
+                          context: context,
+                          pageBuilder: (context, anim1, anim2) {
+                            return Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: 100,
+                                margin: const EdgeInsets.only(
+                                  bottom: 10,
+                                  left: 12,
+                                  right: 12,
+                                ),
+                                decoration: const BoxDecoration(
+                                  color: Color.fromARGB(197, 255, 255, 255),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    bottomLeft: Radius.circular(5),
+                                    bottomRight: Radius.circular(5),
+                                  ),
+                                ),
+                                child: Row(
+                                  // crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 20),
+                                      height: 80,
+                                      width: 70,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          imagepck("gallery");
+                                        },
+                                        child: Column(
+                                          children: const [
+                                            Icon(
+                                              Icons.filter,
+                                              size: 50,
+                                            ),
+                                            Text(
+                                              "gallery",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 20),
+                                      height: 80,
+                                      width: 70,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          imagepck("Camera");
+                                        },
+                                        child: Column(
+                                          children: const [
+                                            Icon(
+                                              Icons.camera,
+                                              size: 50,
+                                            ),
+                                            Text(
+                                              "Camera",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          transitionBuilder: (context, anim1, anim2, child) {
+                            return SlideTransition(
+                              position:
+                                  Tween(begin: Offset(0, 1), end: Offset(0, 0))
+                                      .animate(anim1),
+                              child: child,
+                            );
+                          },
+                        );
+                      },
                       child: const Text(
                         "Edit image",
-                        style: TextStyle(color: Colors.blueGrey, fontSize: 20),
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 20,
+                        ),
                       ),
                     )
                   ],
@@ -128,7 +293,7 @@ class _profilePageState extends State<profilePage> {
                     Container(
                       padding: EdgeInsets.all(15),
                       child: TextFormField(
-                        controller: userName,
+                        controller: Username,
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
                           hintText: "username",
@@ -193,8 +358,7 @@ class _profilePageState extends State<profilePage> {
                         // },
                       ),
                     ),
-                    // const SizedBox(height: 180),
-                    Text(userpic.text),
+                    const SizedBox(height: 200),
                     Container(
                       width: 250,
                       height: 50,
@@ -202,7 +366,9 @@ class _profilePageState extends State<profilePage> {
                           color: Colors.blueGrey,
                           borderRadius: BorderRadius.circular(25)),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          editProfile();
+                        },
                         child: const Text(
                           "save",
                           style: TextStyle(color: Colors.white, fontSize: 24),

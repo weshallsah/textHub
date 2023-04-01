@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,14 @@ class _SndState extends State<Snd> {
       'Createdat': Timestamp.now(),
       'UserId': auth?.uid,
       'Username': user['Username'],
+      'userProf':user['profile_img_url'],
     });
+    // FirebaseDatabase.instance.ref('Chat').child(Timestamp.now() as String).set({
+    //   'Text': entermassage,
+    //   // 'Createdat': ,
+    //   'UserId': auth?.uid,
+    //   'Username': user['Username'],
+    // });
   }
 
   @override

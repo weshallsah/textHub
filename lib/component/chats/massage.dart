@@ -30,12 +30,15 @@ class Massage extends StatelessWidget {
               );
             }
             final docmassage = chatsnapshot.data?.docs;
+            // final _User =FirebaseFirestore.instance.collection('user').doc(docuid?.uid).get();
             return ListView.builder(
               itemCount: docmassage?.length,
               itemBuilder: (context, index) =>
                   massagePop(docmassage?[index]['Text'],
                   docmassage?[index]['Username'],
                   docmassage?[index]['UserId']==docuid?.uid?true:false,
+                  // docmassage?[index]['UserId']==docuid?.uid?
+                  docmassage?[index]['userProf'],
                   ),
               reverse: true,
             );
