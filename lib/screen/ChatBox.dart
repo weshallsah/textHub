@@ -1,6 +1,8 @@
+import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
 import 'package:chatbot/component/chats/massage.dart';
 import 'package:chatbot/component/chats/send.dart';
 import 'package:chatbot/component/profile/profile.dart';
+import 'package:chatbot/screen/searchScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,6 +18,8 @@ class chatBox extends StatefulWidget {
 class _chatBoxState extends State<chatBox> {
   String? userName = '';
   String? profilimage = '';
+  String? myuid = '';
+  String? docs;
 
   Future getData() async {
     await FirebaseFirestore.instance
@@ -28,10 +32,13 @@ class _chatBoxState extends State<chatBox> {
           setState(() {
             userName = snapshot.data()!['Username'];
             profilimage = snapshot.data()!['profile_img_url'];
+            myuid = snapshot.data()!['uid'];
           });
         }
       },
     );
+    docs = 'FrndConver.${myuid}';
+    print(docs);
   }
 
   @override
@@ -41,9 +48,11 @@ class _chatBoxState extends State<chatBox> {
     super.initState();
   }
 
-  void _isedited(bool isEdit){
+  void _isedited(bool isEdit) {
     getData();
   }
+
+  String RoomID = '';
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +104,6 @@ class _chatBoxState extends State<chatBox> {
                 Center(
                   child: CircleAvatar(
                     radius: 40,
-                    // backgroundImage: AssetImage('assets/img.jpg'),
                     backgroundImage:
                         profilimage != null ? NetworkImage(profilimage!) : null,
                   ),
@@ -147,14 +155,93 @@ class _chatBoxState extends State<chatBox> {
           ),
         ]),
       ),
-      body: Container(
-        child: Column(
-          children: const [
-            Expanded(
-              child: Massage(),
+      // body: Container(
+      //   child: Column(
+      //     children: const [
+      //       Expanded(
+      //         child: Massage(),
+      //       ),
+      //       Snd(),
+      //     ],
+      //   ),
+      // ),
+      //
+      //
+      body: SafeArea(
+        // color: Colors.amber,
+
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('Chat')
+                .where(docs.toString(), isEqualTo: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.hasData) {
+                  final FrndList = snapshot.data?.docs;
+                  if (FrndList != null && FrndList.length > 0) {
+                    return ListView.builder(
+                      itemCount: FrndList.length,
+                      itemBuilder: (context, index) {
+                        final roomId = FrndList[index]['ChatRoomId'];
+                        return Container(
+                          padding: const EdgeInsets.all(10),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 40,
+                              backgroundImage:
+                                  FrndList[index]['ProfImg'] != null
+                                      ? NetworkImage(FrndList[index]['ProfImg'])
+                                      : null,
+                            ),
+                            title: Text(
+                              FrndList[index]['Username'],
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            // subtitle: Text(""),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => chatRoom(
+                                    RoomId: roomId,
+                                    userPic: FrndList[index]['ProfImg'],
+                                    username: FrndList[index]['Username'],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                } else {
+                  return Container();
+                }
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => searchPage(),
             ),
-            Snd(),
-          ],
+          );
+        },
+        child: const Icon(
+          Icons.add,
         ),
       ),
     );

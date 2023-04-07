@@ -54,14 +54,13 @@ class _profilePageState extends State<profilePage> {
   void imagepck(String? _Source) async {
     var newUrl="";
     if (_Source == "gallery") {
-      final pickedimgfile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final pickedimgfile = await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 20);
       setState(() {
         ProfImage = File(pickedimgfile!.path);
       });
     } else {
       final pickedimgfile =
-          await ImagePicker().pickImage(source: ImageSource.camera);
+          await ImagePicker().pickImage(source: ImageSource.camera,imageQuality: 20);
       setState(() {
         ProfImage = File(pickedimgfile!.path);
       });

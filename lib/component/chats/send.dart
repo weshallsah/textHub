@@ -5,29 +5,35 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Snd extends StatefulWidget {
-  const Snd({super.key});
+  final RoomId;
+  const Snd({this.RoomId});
 
   @override
   State<Snd> createState() => _SndState();
 }
 
 class _SndState extends State<Snd> {
-  
-  
   final _controller = new TextEditingController();
   late var entermassage = '';
-  
-  
-  void sndmassage() async{
+
+  void sndmassage() async {
+    final roomID = widget.RoomId;
     final auth = await FirebaseAuth.instance.currentUser;
-    final user=await FirebaseFirestore.instance.collection('user').doc(auth?.uid).get();
+    final user = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(auth?.uid)
+        .get();
     _controller.clear();
-    FirebaseFirestore.instance.collection('Chat').add({
+    FirebaseFirestore.instance
+        .collection('Chat')
+        .doc(roomID)
+        .collection('Massage')
+        .add({
       'Text': entermassage,
       'Createdat': Timestamp.now(),
       'UserId': auth?.uid,
       'Username': user['Username'],
-      'userProf':user['profile_img_url'],
+      'userProf': user['profile_img_url'],
     });
     // FirebaseDatabase.instance.ref('Chat').child(Timestamp.now() as String).set({
     //   'Text': entermassage,
@@ -35,6 +41,7 @@ class _SndState extends State<Snd> {
     //   'UserId': auth?.uid,
     //   'Username': user['Username'],
     // });
+    print(roomID);
   }
 
   @override

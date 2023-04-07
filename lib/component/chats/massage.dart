@@ -1,10 +1,12 @@
+import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
 import 'package:chatbot/component/chats/massagepop.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Massage extends StatelessWidget {
-  const Massage({super.key});
+  final ChatRoom;
+  const Massage({this.ChatRoom});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class Massage extends StatelessWidget {
         return StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Chat')
+              .doc(ChatRoom).collection('Massage')
               .orderBy('Createdat', descending: true)
               .snapshots(),
           builder: (context, chatsnapshot) {

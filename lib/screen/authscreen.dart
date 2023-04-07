@@ -25,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       File? Img) async {
     // ignore: non_constant_identifier_names
     UserCredential Futher;
+    var imgurl;
     try {
       setState(() {
         isloading = !isloading;
@@ -36,12 +37,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Futher = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
-        final ref = FirebaseStorage.instance
+        if(Img!=null){
+          final ref = FirebaseStorage.instance
             .ref()
             .child('Prof_Img')
-            .child('${Futher.user?.uid}.jpg');
-        var imgurl;
-        UploadTask uploadTask = ref.putFile(Img!);
+            .child('${Futher.user?.uid}.jpg',);
+        
+        UploadTask uploadTask = ref.putFile(Img);
         await uploadTask.whenComplete(() async {
           imgurl = await ref.getDownloadURL();
           print("complete");
@@ -49,6 +51,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           //   const Duration(minutes: 1),
           // );
         });
+        }
+        
+
 
         await FirebaseFirestore.instance
             .collection('user')
@@ -57,7 +62,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           {
             'Username': username,
             'Email': email,
-            'profile_img_url':imgurl,
+            'profile_img_url':imgurl ?? "",
+            'uid':Futher.user?.uid,
           },
         ).whenComplete(() => null);
         // uploadimg(Img);
