@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -7,7 +8,11 @@ import Flutter
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback{(register) in 
+    GeneratedPluginRegistrant.register(with: register)}
     GeneratedPluginRegistrant.register(with: self)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    if #available(ios 10.0, *){
+      UNUserNotificationcenter.current().delegate = self as? UNUserNotificationcenter
+    }    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -21,13 +24,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState(){
-    final fcm =  FirebaseMessaging.instance;
-    fcm.requestPermission();
-    // fcm.isAutoInitEnabled;
-    super.initState();
-
-  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

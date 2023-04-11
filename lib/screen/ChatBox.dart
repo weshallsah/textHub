@@ -6,6 +6,7 @@ import 'package:chatbot/screen/searchScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class chatBox extends StatefulWidget {
@@ -38,13 +39,18 @@ class _chatBoxState extends State<chatBox> {
       },
     );
     docs = 'FrndConver.${myuid}';
-    print(docs);
+    // print(docs);
   }
+
+  
 
   @override
   void initState() {
     // TODO: implement initState
+
+    // getnotification();
     getData();
+    
     super.initState();
   }
 
@@ -60,36 +66,13 @@ class _chatBoxState extends State<chatBox> {
       appBar: AppBar(
         title: const Text('Chat'),
         actions: [
-          DropdownButton(
-            // underline: ,
-            dropdownColor: Theme.of(context).hoverColor,
-            icon: const Icon(Icons.more_vert),
-            onChanged: (itemidentifier) {
-              if (itemidentifier == 'Logout') {
-                FirebaseAuth.instance.signOut();
-              }
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
             },
-            items: [
-              DropdownMenuItem(
-                value: 'Logout',
-                child: Container(
-                  // color: Color.fromARGB(230, 3, 168, 244),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.exit_to_app),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        'Logout',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            icon: const Icon(Icons.logout_outlined),
           ),
+          // Text("Logout",)
         ],
       ),
       drawer: Drawer(
@@ -185,10 +168,11 @@ class _chatBoxState extends State<chatBox> {
                       itemBuilder: (context, index) {
                         final roomId = FrndList[index]['ChatRoomId'];
                         return Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.only(
+                              left: 8, bottom: 10, right: 8, top: 10),
                           child: ListTile(
                             leading: CircleAvatar(
-                              radius: 40,
+                              // radius: 40,
                               backgroundImage:
                                   FrndList[index]['ProfImg'] != null
                                       ? NetworkImage(FrndList[index]['ProfImg'])
