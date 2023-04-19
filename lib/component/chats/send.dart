@@ -1,3 +1,4 @@
+import 'package:chatbot/Notification/notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -44,9 +45,10 @@ class _SndState extends State<Snd> {
     //   'Username': user['Username'],
     // });
     print(roomID);
-    FirebaseMessaging.instance.sendMessage(
-      messageId: "",
-    );
+    // FirebaseMessaging.instance.sendMessage(
+    //   messageId: "",
+    // );
+    // LocalNotification().shownotification(0, 'testing', 'is that working','');
   }
 
   @override

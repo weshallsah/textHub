@@ -1,3 +1,4 @@
+import 'package:chatbot/Notification/notification.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import '../massage.dart';
@@ -14,13 +15,10 @@ class chatRoom extends StatefulWidget {
 }
 
 class _chatRoomState extends State<chatRoom> {
+
+  @override
   @override
   Widget build(BuildContext context) {
-    void initState() async {
-      final FCM = FirebaseMessaging.instance.onTokenRefresh;
-
-      super.initState();
-    }
 
     return Scaffold(
       appBar: AppBar(

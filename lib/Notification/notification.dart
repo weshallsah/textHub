@@ -1,43 +1,33 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class LocalNotification {
-  final FlutterLocalNotificationsPlugin Notifcation =
-      FlutterLocalNotificationsPlugin();
+// class LocalNotification {
+  
 
-  Future<void> initNotification() async {
-    AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('message');
+//   Future<void> initNotification() async {
+    
 
-    var initializationSettingsIos = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-      onDidReceiveLocalNotification: (id, title, body, payload) async {},
-    );
-    var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIos,
-    );
-    await Notifcation.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) async {},
-    );
-  }
+    
+    
+//     await Notifcation.initialize(
+//       initializationSettings,
+//       onDidReceiveNotificationResponse:
+//           (NotificationResponse notificationResponse) async {},
+//     );
+//   }
 
-  notificationDetails() {
-    return const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'channelId',
-        'channelName',
-        importance: Importance.max,
-      ),
-      iOS: DarwinNotificationDetails(),
-    );
-  }
+//   notificationDetails() {
+//     return const NotificationDetails(
+//       android: AndroidNotificationDetails(
+//         'channelId',
+//         'channelName',
+//         importance: Importance.max,
+//       ),
+//       iOS: DarwinNotificationDetails(),
+//     );
+//   }
 
-  Future shownotification(
-      int id, String? title, String? body, String? payload) async {
-    return Notifcation.show(id, title, body, await notificationDetails());
-  }
-}
+//   Future shownotification(
+//        String? title, String? body, String? payload) async {
+//     return Notifcation.show( 1,title, body, await notificationDetails());
+//   }
+// }

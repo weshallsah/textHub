@@ -2,12 +2,16 @@ import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
 import 'package:chatbot/component/chats/massage.dart';
 import 'package:chatbot/component/chats/send.dart';
 import 'package:chatbot/component/profile/profile.dart';
+import 'package:chatbot/main.dart';
 import 'package:chatbot/screen/searchScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../Notification/notification.dart';
 
 class chatBox extends StatefulWidget {
   chatBox();
@@ -21,6 +25,20 @@ class _chatBoxState extends State<chatBox> {
   String? profilimage = '';
   String? myuid = '';
   String? docs;
+  String? roomId;
+
+  void shownotifi(String username, String mess) async {
+    AndroidNotificationDetails androidditail = const AndroidNotificationDetails(
+      "chatnotification",
+      "chat",
+      importance: Importance.max,
+      priority: Priority.max,
+    );
+    DarwinNotificationDetails IOSditail = DarwinNotificationDetails();
+    NotificationDetails NotiDitail =
+        NotificationDetails(android: androidditail, iOS: IOSditail);
+    await notifcation.show(1, username, mess, NotiDitail);
+  }
 
   Future getData() async {
     await FirebaseFirestore.instance
@@ -42,15 +60,26 @@ class _chatBoxState extends State<chatBox> {
     // print(docs);
   }
 
-  
+  Future<void> hendelMessage(RemoteMessage message) async {
+    if (message.data['type'] == 'chat') {
+      shownotifi(message.data['username'], message.data['message']);
+    }
+  }
+
+  Future<void> getMessage() async {
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    FirebaseMessaging.onBackgroundMessage((message) => hendelMessage(message));
+    FirebaseMessaging.onMessage.listen((event) {
+      hendelMessage(event);
+    });
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
-
-    // getnotification();
     getData();
-    
+    getMessage();
+
     super.initState();
   }
 
@@ -166,7 +195,7 @@ class _chatBoxState extends State<chatBox> {
                     return ListView.builder(
                       itemCount: FrndList.length,
                       itemBuilder: (context, index) {
-                        final roomId = FrndList[index]['ChatRoomId'];
+                        roomId = FrndList[index]['ChatRoomId'];
                         return Container(
                           padding: const EdgeInsets.only(
                               left: 8, bottom: 10, right: 8, top: 10),
@@ -209,7 +238,7 @@ class _chatBoxState extends State<chatBox> {
                   return Container();
                 }
               } else {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
@@ -220,9 +249,11 @@ class _chatBoxState extends State<chatBox> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => searchPage(),
+              builder: (context) => const searchPage(),
             ),
           );
+          // shownotifi("vishal", "hello");
+          // LocalNotification().shownotification("title", "body", 'item x');
         },
         child: const Icon(
           Icons.add,
