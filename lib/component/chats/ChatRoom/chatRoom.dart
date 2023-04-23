@@ -8,26 +8,43 @@ class chatRoom extends StatefulWidget {
   final RoomId;
   final userPic;
   final username;
-  const chatRoom({this.RoomId, this.userPic, this.username});
+  final NotiID;
+  const chatRoom({this.RoomId, this.userPic, this.username,this.NotiID});
 
   @override
   State<chatRoom> createState() => _chatRoomState();
 }
 
 class _chatRoomState extends State<chatRoom> {
-
   @override
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        // leading: CircleAvatar(
-        //   radius: 5,
-        //   backgroundImage: userPic!=null?NetworkImage(userPic):null,
-        // ),
-
-        title: Text(widget.username),
+        // leadingWidth: 30,
+        leadingWidth: 95,
+        leading: Container(
+          // color: Colors.amber,
+          child: Row(
+            children: [
+              IconButton(
+                // padding: EdgeInsets.only(right: ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                ),
+              ),
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: Colors.blueGrey,
+                foregroundImage: NetworkImage(widget.userPic!=null?widget.userPic:null),
+              )
+            ],
+          ),
+        ),
+        title: Text(widget.username ?? ""),
       ),
       body: Container(
         child: Column(
@@ -35,7 +52,7 @@ class _chatRoomState extends State<chatRoom> {
             Expanded(
               child: Massage(ChatRoom: widget.RoomId),
             ),
-            Snd(RoomId: widget.RoomId),
+            Snd(RoomId: widget.RoomId,NotiID: widget.NotiID),
           ],
         ),
       ),

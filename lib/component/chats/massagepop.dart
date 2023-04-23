@@ -27,18 +27,18 @@ class massagePop extends StatelessWidget {
             mainAxisAlignment:
                 _isme ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-               CircleAvatar(
-                backgroundColor: Colors.grey,
-                foregroundImage: NetworkImage(_photourl),
-                radius: 18,
-              ),
+              //  CircleAvatar(
+              //   backgroundColor: Colors.grey,
+              //   foregroundImage: NetworkImage(_photourl),
+              //   radius: 18,
+              // ),
               const SizedBox(
                 width: 5,
               ),
               Text(
                 _username,
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
               ),
             ],
           ),
@@ -48,8 +48,8 @@ class massagePop extends StatelessWidget {
         ),
         Container(
           margin: _isme
-              ? const EdgeInsets.only(right: 4)
-              : const EdgeInsets.only(left: 4),
+              ? const EdgeInsets.only(right: 6)
+              : const EdgeInsets.only(left: 6),
           padding: const EdgeInsets.all(8.0),
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .6),

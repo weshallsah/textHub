@@ -5,9 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:uuid/uuid.dart';
 
-final ChatId = Uuid();
+final ChatId = const Uuid();
 
 class searchPage extends StatefulWidget {
   const searchPage({super.key});
@@ -20,7 +21,8 @@ class _searchPageState extends State<searchPage> {
   TextEditingController Searchuser = TextEditingController();
   String? ChatRoomid;
 
-  void getchatRoom(String uid, String username, String Pic) async {
+  void getchatRoom(
+      String uid, String username, String Pic, String notiID) async {
     final myuid = FirebaseAuth.instance.currentUser?.uid;
     final Room = await FirebaseFirestore.instance
         .collection('Chat')
@@ -35,11 +37,14 @@ class _searchPageState extends State<searchPage> {
         'Username': username,
         'ProfImg': Pic,
         'ChatRoomId': ChatRoomid,
+        'Ismess': false,
+        'notiID': notiID,
         'FrndConver': {
           uid: true,
           myuid: true,
         },
       });
+      print("get in chatid");
       print(ChatRoomid);
     }
   }
@@ -47,158 +52,152 @@ class _searchPageState extends State<searchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          "Search",
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 24,
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back)),
+          centerTitle: true,
+          title: const Text(
+            "Search",
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 24,
+            ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(children: [
-            const SizedBox(
-              height: 18,
-            ),
+        body: Column(
+          children: [
             Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: Searchuser,
-                cursorHeight: 28,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w400,
-                ),
-                decoration: const InputDecoration(
-                  hintText: "search useremail",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        20,
+              // color: Colors.amber,
+              // height: 60,
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.only(
+                        top: 30, bottom: 15, left: 10, right: 10),
+                    // height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      // color: Colors.amber,
+                    ),
+                    child: TextField(
+                      controller: Searchuser,
+                      textAlign: TextAlign.center,
+                      cursorHeight: 30,
+                      cursorRadius: const Radius.circular(20),
+                      decoration: InputDecoration(
+                        hintText: "search email",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(left: 100, right: 100),
+                      height: 45,
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        "search",
+                        style: TextStyle(fontSize: 28, color: Colors.white),
                       ),
                     ),
-                    gapPadding: 12,
-                  ),
-                ),
-                textAlign: TextAlign.center,
+                    onTap: () {
+                      setState(() {});
+                      // print(Searchuser.text);
+                    },
+                  )
+                ],
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
-            GestureDetector(
+            Expanded(
               child: Container(
-                alignment: Alignment.center,
-                height: 50,
-                width: 150,
-                decoration: const BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(
-                      25,
-                    ),
-                  ),
-                ),
-                child: const Text(
-                  // textAlign: TextAlign.center,
-                  "Search",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              onTap: () {
-                setState(() {});
-              },
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('user')
-                  .where('Email', isEqualTo: Searchuser.text)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.hasData) {
-                    final Frnd = snapshot.data?.docs;
-                    if (Frnd != null && Frnd.length > 0) {
-                      print(Frnd);
-
-                      return SingleChildScrollView(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          height: 450,
-                          width: double.infinity,
-                          // color: Colors.amber,
-                          child: ListTile(
-                              leading: CircleAvatar(
-                                radius: 40,
-                                backgroundImage: Frnd[0]['profile_img_url'] !=
-                                        null
-                                    ? NetworkImage(Frnd[0]['profile_img_url'])
-                                    : null,
-                              ),
-                              title: Text(
-                                Frnd[0]['Username'],
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Text(
-                                Frnd[0]['Email'],
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              onTap: () async {
-                                await Future(() => getchatRoom(
-                                      Frnd[0]['uid'],
-                                      Frnd[0]['Username'],
-                                      Frnd[0]['profile_img_url'],
-                                    ));
-
-                                // ignore: use_build_context_synchronously
-                                Navigator.pop(context);
-                                // ignore: use_build_context_synchronously
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        chatRoom(RoomId: ChatRoomid),
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('user')
+                        .where("Email", isEqualTo: Searchuser.text)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasData) {
+                          final searchuser = snapshot.data?.docs;
+                          if (searchuser != null && searchuser.length > 0) {
+                            print(searchuser);
+                            return ListView.builder(
+                              itemCount: searchuser.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    // backgroundColor: Colors.amber,
+                                    backgroundImage: searchuser[index]
+                                                ['profile_img_url'] !=
+                                            null
+                                        ? NetworkImage(searchuser[index]
+                                            ['profile_img_url'])
+                                        : null,
                                   ),
+                                  title: Text(searchuser[index]['Username']),
+                                  subtitle: Text(searchuser[index]['Email']),
+                                  onTap: () async {
+                                    await Future(() => getchatRoom(
+                                        searchuser[index]['uid'],
+                                        searchuser[index]['Username'],
+                                        searchuser[index]['profile_img_url'],
+                                        searchuser[index]['Noti_Id']));
+                                    print("checking before chatroom");
+                                    print(ChatRoomid);
+                                    Navigator.pop(context);
+                                    // ignore: use_build_context_synchronously
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => chatRoom(
+                                          RoomId: ChatRoomid,
+                                          username: searchuser[index]
+                                              ['Username'],
+                                          userPic: searchuser[index]
+                                              ['profile_img_url'],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
-                              }
-                              // onTap: ,
-                              ),
-                        ),
-                      );
-                    } else {
-                      return const Text("No User found");
-                    }
-                  } else if (snapshot.hasError) {
-                    return Text("check the user email");
-                  } else {
-                    return Text("No result");
-                  }
-                } else {
-                  return CircularProgressIndicator();
-                }
-              },
+                              },
+                            );
+                          } else {
+                            return const Text("NO User Found");
+                          }
+                        } else {
+                          return const Text("NO user found");
+                        }
+                      } else {
+                        return const Text("No user found");
+                      }
+                    }),
+              ),
             )
-          ]),
-        ),
-      ),
-    );
+          ],
+        ));
   }
 }

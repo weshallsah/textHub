@@ -46,6 +46,11 @@ dependencies:
   uuid: ^3.0.7
   cloud_functions: ^4.1.0
   flutter_local_notifications: ^13.0.0
+  firebase_analytics: ^10.2.1
+  email_auth: ^1.0.0
+  auth_handler: ^1.0.0
+  http: ^0.13.5
+  flutter_notification_channel: ^2.0.0
 
 dev_dependencies:
   flutter_test:

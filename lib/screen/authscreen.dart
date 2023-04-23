@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chatbot/component/Auth/auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submitForm(String email, String password, String username, bool islogin,
       File? Img) async {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
     // ignore: non_constant_identifier_names
     UserCredential Futher;
     var imgurl;
@@ -60,6 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             .doc(Futher.user?.uid)
             .set(
           {
+            'Noti_Id':fcmToken,
             'Username': username,
             'Email': email,
             'profile_img_url':imgurl ?? "",

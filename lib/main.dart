@@ -2,10 +2,14 @@ import 'dart:math';
 
 import 'package:chatbot/screen/ChatBox.dart';
 import 'package:chatbot/screen/authscreen.dart';
+import 'package:chatbot/screen/searchScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
 
 FlutterLocalNotificationsPlugin notifcation = FlutterLocalNotificationsPlugin();
 
@@ -32,6 +36,13 @@ void main() async {
 
   bool? initialized = await notifcation.initialize(initializationSettings);
 
+  var result = await FlutterNotificationChannel.registerNotificationChannel(
+    description: 'message Nofication',
+    id: 'chats',
+    importance: NotificationImportance.IMPORTANCE_HIGH,
+    name: 'Chat',
+  );
+  print(result);
   print(initialized);
 
   runApp(const MyApp());

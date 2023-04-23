@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:chatbot/Notification/notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,10 +9,12 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class Snd extends StatefulWidget {
   final RoomId;
-  const Snd({this.RoomId});
+  final NotiID;
+  const Snd({this.RoomId, this.NotiID});
 
   @override
   State<Snd> createState() => _SndState();
@@ -27,6 +32,21 @@ class _SndState extends State<Snd> {
         .doc(auth?.uid)
         .get();
     _controller.clear();
+    // print(roomID);
+    FirebaseFirestore.instance.collection('Chat').doc(roomID).update({
+      'Ismess': true,
+    });
+
+    var Body = {
+      "to": widget.NotiID,
+      "notification": {
+        "body": entermassage,
+        "title": user['Username'],
+        "type": "Chat",
+        "roomID": roomID,
+      }
+    };
+
     FirebaseFirestore.instance
         .collection('Chat')
         .doc(roomID)
@@ -37,18 +57,23 @@ class _SndState extends State<Snd> {
       'UserId': auth?.uid,
       'Username': user['Username'],
       'userProf': user['profile_img_url'],
+    }).then((value) {
+      var res;
+      try {
+        res = post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            body: jsonEncode(Body),
+            headers: {
+              HttpHeaders.contentTypeHeader: "application/json",
+              HttpHeaders.authorizationHeader:
+                  "key=AAAARO3dPks:APA91bEbDftQ48XveBpl3S_p9WwObffxpXc6e5nlOt55PFVHKL7LaPRvJi2HIXNyzN7mXi913fvohsn-W39weZqPxqn8UAiJ_BnUXMLfVQHkQvQl9TuYGRKQTnwFbXEkHubXl8LKORqP"
+            });
+      } catch (err) {
+        print(err);
+      }
+      print("Response : $res");
     });
-    // FirebaseDatabase.instance.ref('Chat').child(Timestamp.now() as String).set({
-    //   'Text': entermassage,
-    //   // 'Createdat': ,
-    //   'UserId': auth?.uid,
-    //   'Username': user['Username'],
-    // });
+
     print(roomID);
-    // FirebaseMessaging.instance.sendMessage(
-    //   messageId: "",
-    // );
-    // LocalNotification().shownotification(0, 'testing', 'is that working','');
   }
 
   @override
@@ -72,7 +97,10 @@ class _SndState extends State<Snd> {
             ),
           ),
           IconButton(
-              onPressed: entermassage.trim().isEmpty ? null : sndmassage,
+              onPressed: () {
+                print(widget.RoomId);
+                entermassage.trim().isEmpty ? null : sndmassage();
+              },
               icon: const Icon(Icons.send))
         ],
       ),

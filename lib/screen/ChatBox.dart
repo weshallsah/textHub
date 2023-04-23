@@ -27,7 +27,7 @@ class _chatBoxState extends State<chatBox> {
   String? docs;
   String? roomId;
 
-  void shownotifi(String username, String mess) async {
+  void shownotifi(String? username, String? mess) async {
     AndroidNotificationDetails androidditail = const AndroidNotificationDetails(
       "chatnotification",
       "chat",
@@ -61,17 +61,20 @@ class _chatBoxState extends State<chatBox> {
   }
 
   Future<void> hendelMessage(RemoteMessage message) async {
-    if (message.data['type'] == 'chat') {
-      shownotifi(message.data['username'], message.data['message']);
+    print("in hendeler");
+    if (message.data['type'] == 'Chat'){
+      shownotifi(message.data['title'], message.data['body']);
+      print(message.data['type']);
     }
   }
 
   Future<void> getMessage() async {
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    FirebaseMessaging.onBackgroundMessage((message) => hendelMessage(message));
-    FirebaseMessaging.onMessage.listen((event) {
-      hendelMessage(event);
+    FirebaseMessaging.instance.getToken();
+    FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
+      
+      hendelMessage(remoteMessage);
+      print(remoteMessage.data["type"]);
     });
   }
 
@@ -186,6 +189,7 @@ class _chatBoxState extends State<chatBox> {
             stream: FirebaseFirestore.instance
                 .collection('Chat')
                 .where(docs.toString(), isEqualTo: true)
+                .where("Ismess", isEqualTo: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
@@ -223,6 +227,7 @@ class _chatBoxState extends State<chatBox> {
                                     RoomId: roomId,
                                     userPic: FrndList[index]['ProfImg'],
                                     username: FrndList[index]['Username'],
+                                    NotiID: FrndList[index]['notiID'],
                                   ),
                                 ),
                               );
