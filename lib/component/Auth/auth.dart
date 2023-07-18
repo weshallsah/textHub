@@ -1,11 +1,9 @@
 // ignore_for_file: sized_box_for_whitespace, use_key_in_widget_constructors
 
 import 'dart:io';
-import 'dart:math';
 
 import 'package:auth_handler/auth_handler.dart';
 import 'package:chatbot/component/profile/imagepicker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Authfrom extends StatefulWidget {
@@ -18,6 +16,7 @@ class Authfrom extends StatefulWidget {
       String username,
       // ignore: non_constant_identifier_names
       bool islogin,
+      // ignore: non_constant_identifier_names
       File? ProfImg) submitfm;
 
   const Authfrom(this.submitfm, this.isloading);
@@ -28,7 +27,9 @@ class Authfrom extends StatefulWidget {
 class _AuthfromState extends State<Authfrom> {
   final _formkey = GlobalKey<FormState>();
 
+  // ignore: non_constant_identifier_names
   TextEditingController Email = TextEditingController();
+  // ignore: non_constant_identifier_names
   TextEditingController Otp = TextEditingController();
   var _islogin = true;
   var _issnd = false;
@@ -38,15 +39,16 @@ class _AuthfromState extends State<Authfrom> {
   // ignore: non_constant_identifier_names
   var _Email = "";
   // prefer_typing_uninitialized_variables
-  // ignore: prefer_typing_uninitialized_variables
+  // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
   var _ProfImg;
 
-  var res;
+  var res=false;
 
   AuthHandler authHandler = AuthHandler();
 
   void verifyOTP() async {
     res = await authHandler.verifyOtp(Otp.text);
+    // ignore: avoid_print
     print(' iscorrect : $res');
   }
 
@@ -64,7 +66,7 @@ class _AuthfromState extends State<Authfrom> {
 
   void _trysumbmit() {
     final isvalid = _formkey.currentState?.validate();
-    if (isvalid != null && res) {
+    if (isvalid != null && (res || _islogin)) {
       _formkey.currentState?.save();
     }
     widget.submitfm(
@@ -130,7 +132,7 @@ class _AuthfromState extends State<Authfrom> {
                     ),
                     child: TextFormField(
                       textAlign: TextAlign.center,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           // contentPadding: const EdgeInsets.only(
                           //   bottom: 10,
                           // ),
@@ -188,7 +190,7 @@ class _AuthfromState extends State<Authfrom> {
                       ),
                       child: TextFormField(
                         textAlign: TextAlign.center,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             // contentPadding: const EdgeInsets.only(
                             //   bottom: 10,
                             // ),
@@ -248,7 +250,7 @@ class _AuthfromState extends State<Authfrom> {
                           child: TextFormField(
                             textAlign: TextAlign.center,
                             controller: Otp,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 // contentPadding: const EdgeInsets.only(
                                 //   bottom: 10,
                                 // ),
@@ -276,7 +278,7 @@ class _AuthfromState extends State<Authfrom> {
                             },
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 18,
                         ),
                         TextButton(
@@ -288,7 +290,7 @@ class _AuthfromState extends State<Authfrom> {
                           },
                           child: Text(
                             _issnd ? "Resend" : "send",
-                            style: TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 18),
                           ),
                         ),
                       ],
@@ -321,7 +323,7 @@ class _AuthfromState extends State<Authfrom> {
                     ),
                     child: TextFormField(
                       textAlign: TextAlign.center,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           // contentPadding: const EdgeInsets.only(
                           //   bottom: 10,
                           // ),
@@ -343,7 +345,7 @@ class _AuthfromState extends State<Authfrom> {
                         return null;
                       },
                       onChanged: (value) {
-                        _password = value as String;
+                        _password = value;
                       },
                       onSaved: (newValue) {
                         _password = newValue as String;

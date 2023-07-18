@@ -1,17 +1,11 @@
 import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
-import 'package:chatbot/component/chats/massage.dart';
-import 'package:chatbot/component/chats/send.dart';
 import 'package:chatbot/component/profile/profile.dart';
-import 'package:chatbot/main.dart';
 import 'package:chatbot/screen/searchScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 
-import '../Notification/notification.dart';
 
 class chatBox extends StatefulWidget {
   chatBox();
@@ -25,20 +19,10 @@ class _chatBoxState extends State<chatBox> {
   String? profilimage = '';
   String? myuid = '';
   String? docs;
+  // Map<String,dynamic>? Frindid;
   String? roomId;
 
-  void shownotifi(String? username, String? mess) async {
-    AndroidNotificationDetails androidditail = const AndroidNotificationDetails(
-      "chatnotification",
-      "chat",
-      importance: Importance.max,
-      priority: Priority.max,
-    );
-    DarwinNotificationDetails IOSditail = DarwinNotificationDetails();
-    NotificationDetails NotiDitail =
-        NotificationDetails(android: androidditail, iOS: IOSditail);
-    await notifcation.show(1, username, mess, NotiDitail);
-  }
+  
 
   Future getData() async {
     await FirebaseFirestore.instance
@@ -57,31 +41,17 @@ class _chatBoxState extends State<chatBox> {
       },
     );
     docs = 'FrndConver.${myuid}';
-    // print(docs);
+    // print('geting data: $docs');
   }
 
-  Future<void> hendelMessage(RemoteMessage message) async {
-    print("in hendeler");
-    if (message.data['type'] == 'Chat'){
-      shownotifi(message.data['title'], message.data['body']);
-      print(message.data['type']);
-    }
-  }
+  
 
-  Future<void> getMessage() async {
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
-    FirebaseMessaging.instance.getToken();
-    FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
-      
-      hendelMessage(remoteMessage);
-      print(remoteMessage.data["type"]);
-    });
-  }
+  
 
   @override
   void initState() {
     getData();
-    getMessage();
+    // getMessage();
 
     super.initState();
   }
@@ -94,9 +64,17 @@ class _chatBoxState extends State<chatBox> {
 
   @override
   Widget build(BuildContext context) {
+    // String _Date = DateFormat.LLL().toString();
+    print(DateFormat.d().format(DateTime.now()));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        // leading: Icon(Icons.menu,color: colors.,),
+        
+        backgroundColor: Colors.white54,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        title: const Text('Chathub',style: TextStyle(fontSize: 24),),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
@@ -104,10 +82,11 @@ class _chatBoxState extends State<chatBox> {
             },
             icon: const Icon(Icons.logout_outlined),
           ),
-          // Text("Logout",)
         ],
       ),
       drawer: Drawer(
+        // backgroundColor: Colors.black,
+        
         // backgroundColor: const Color.fromRGBO(50, 75, 205, 1),
         child: ListView(children: [
           DrawerHeader(
@@ -170,18 +149,6 @@ class _chatBoxState extends State<chatBox> {
           ),
         ]),
       ),
-      // body: Container(
-      //   child: Column(
-      //     children: const [
-      //       Expanded(
-      //         child: Massage(),
-      //       ),
-      //       Snd(),
-      //     ],
-      //   ),
-      // ),
-      //
-      //
       body: SafeArea(
         // color: Colors.amber,
 
@@ -200,6 +167,15 @@ class _chatBoxState extends State<chatBox> {
                       itemCount: FrndList.length,
                       itemBuilder: (context, index) {
                         roomId = FrndList[index]['ChatRoomId'];
+                        Map Frindid = FrndList[index]['FrndConver'];
+                        String? uid;
+                        Frindid.forEach(
+                          (key, value) => {
+                            if (key != myuid) {uid = key}
+                          },
+                        );
+                        // print(uid);
+                        // final mynotification = FrndList[index]['NotificationID'][''];
                         return Container(
                           padding: const EdgeInsets.only(
                               left: 8, bottom: 10, right: 8, top: 10),
@@ -227,7 +203,7 @@ class _chatBoxState extends State<chatBox> {
                                     RoomId: roomId,
                                     userPic: FrndList[index]['ProfImg'],
                                     username: FrndList[index]['Username'],
-                                    NotiID: FrndList[index]['notiID'],
+                                    userID: uid,
                                   ),
                                 ),
                               );

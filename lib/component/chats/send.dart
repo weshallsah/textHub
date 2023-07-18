@@ -10,11 +10,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 class Snd extends StatefulWidget {
   final RoomId;
-  final NotiID;
-  const Snd({this.RoomId, this.NotiID});
+  final userId;
+  const Snd({this.RoomId, this.userId});
 
   @override
   State<Snd> createState() => _SndState();
@@ -22,8 +23,8 @@ class Snd extends StatefulWidget {
 
 class _SndState extends State<Snd> {
   final _controller = new TextEditingController();
+  String? NotiID;
   late var entermassage = '';
-
   void sndmassage() async {
     final roomID = widget.RoomId;
     final auth = await FirebaseAuth.instance.currentUser;
@@ -36,14 +37,29 @@ class _SndState extends State<Snd> {
     FirebaseFirestore.instance.collection('Chat').doc(roomID).update({
       'Ismess': true,
     });
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(widget.userId)
+        .get()
+        .then((snapshot) async {
+      if (snapshot.exists) {
+        setState(() {
+          NotiID = snapshot.data()!['Noti_Id'];
+        });
+      }
+    });
 
     var Body = {
-      "to": widget.NotiID,
+      "to": NotiID,
       "notification": {
         "body": entermassage,
         "title": user['Username'],
-        "type": "Chat",
+        "android_channel_id": "chats",
+      },
+      "data": {
         "roomID": roomID,
+        "type": "Chat",
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
       }
     };
 
@@ -54,6 +70,7 @@ class _SndState extends State<Snd> {
         .add({
       'Text': entermassage,
       'Createdat': Timestamp.now(),
+      'isvanish':DateFormat.d().format(DateTime.now()),
       'UserId': auth?.uid,
       'Username': user['Username'],
       'userProf': user['profile_img_url'],

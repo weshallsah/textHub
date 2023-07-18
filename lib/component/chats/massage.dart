@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
 import 'package:chatbot/component/chats/massagepop.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,7 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Massage extends StatelessWidget {
+  // ignore: non_constant_identifier_names, prefer_typing_uninitialized_variables
   final ChatRoom;
+  // ignore: use_key_in_widget_constructors
   const Massage({this.ChatRoom});
 
   @override
@@ -36,14 +40,19 @@ class Massage extends StatelessWidget {
             // final _User =FirebaseFirestore.instance.collection('user').doc(docuid?.uid).get();
             return ListView.builder(
               itemCount: docmassage?.length,
-              itemBuilder: (context, index) =>
+              itemBuilder: (context, index) {
+                // ignore: no_leading_underscores_for_local_identifiers
+                final _date = (docmassage?[index]['isvanish']);
+                if(true){
                   massagePop(docmassage?[index]['Text'],
                   docmassage?[index]['Username'],
                   docmassage?[index]['UserId']==docuid?.uid?true:false,
                   // docmassage?[index]['UserId']==docuid?.uid?
                   docmassage?[index]['userProf'],
-                  ),
-              reverse: true,
+                  );
+                  reverse: true;
+                }                
+              }
             );
           },
         );

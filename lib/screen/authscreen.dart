@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
+
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -24,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submitForm(String email, String password, String username, bool islogin,
       File? Img) async {
-        final fcmToken = await FirebaseMessaging.instance.getToken();
+        var fcmToken = await FirebaseMessaging.instance.getToken();
     // ignore: non_constant_identifier_names
     UserCredential Futher;
     var imgurl;
@@ -35,6 +37,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (islogin) {
         Futher = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
+        await FirebaseFirestore.instance.collection('user').doc(Futher.user?.uid).update({
+          'Noti_Id':fcmToken,
+        });
       } else {
         Futher = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);

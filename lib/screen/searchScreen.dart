@@ -1,5 +1,6 @@
 import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
 import 'package:chatbot/screen/ChatBox.dart';
+import 'package:chatbot/screen/authscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,8 +22,7 @@ class _searchPageState extends State<searchPage> {
   TextEditingController Searchuser = TextEditingController();
   String? ChatRoomid;
 
-  void getchatRoom(
-      String uid, String username, String Pic, String notiID) async {
+  void getchatRoom(String uid, String username, String Pic, String notiID) async {
     final myuid = FirebaseAuth.instance.currentUser?.uid;
     final Room = await FirebaseFirestore.instance
         .collection('Chat')
@@ -38,7 +38,6 @@ class _searchPageState extends State<searchPage> {
         'ProfImg': Pic,
         'ChatRoomId': ChatRoomid,
         'Ismess': false,
-        'notiID': notiID,
         'FrndConver': {
           uid: true,
           myuid: true,
