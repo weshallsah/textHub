@@ -65,7 +65,7 @@ class _chatBoxState extends State<chatBox> {
   @override
   Widget build(BuildContext context) {
     // String _Date = DateFormat.LLL().toString();
-    print(DateFormat.d().format(DateTime.now()));
+    // print(DateFormat.d().format(DateTime.now()));
     return Scaffold(
       appBar: AppBar(
         // leading: Icon(Icons.menu,color: colors.,),
@@ -190,8 +190,8 @@ class _chatBoxState extends State<chatBox> {
                             title: Text(
                               FrndList[index]['Username'],
                               style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w400,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             // subtitle: Text(""),

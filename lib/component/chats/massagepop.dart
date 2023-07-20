@@ -8,7 +8,7 @@ class massagePop extends StatelessWidget {
   final _photourl;
   final _isme;
   const massagePop(this._Massage, this._username, this._isme,this._photourl);
-
+  // print()
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,18 +27,14 @@ class massagePop extends StatelessWidget {
             mainAxisAlignment:
                 _isme ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              //  CircleAvatar(
-              //   backgroundColor: Colors.grey,
-              //   foregroundImage: NetworkImage(_photourl),
-              //   radius: 18,
-              // ),
+               
               const SizedBox(
                 width: 5,
               ),
               Text(
                 _username,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ],
           ),

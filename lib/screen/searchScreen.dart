@@ -22,7 +22,8 @@ class _searchPageState extends State<searchPage> {
   TextEditingController Searchuser = TextEditingController();
   String? ChatRoomid;
 
-  void getchatRoom(String uid, String username, String Pic, String notiID) async {
+  void getchatRoom(
+      String uid, String username, String Pic, String notiID) async {
     final myuid = FirebaseAuth.instance.currentUser?.uid;
     final Room = await FirebaseFirestore.instance
         .collection('Chat')
@@ -98,25 +99,25 @@ class _searchPageState extends State<searchPage> {
                       },
                     ),
                   ),
-                  GestureDetector(
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(left: 100, right: 100),
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        "search",
-                        style: TextStyle(fontSize: 28, color: Colors.white),
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {});
-                      // print(Searchuser.text);
-                    },
-                  )
+                  // GestureDetector(
+                  //   child: Container(
+                  //     alignment: Alignment.center,
+                  //     margin: const EdgeInsets.only(left: 100, right: 100),
+                  //     height: 45,
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.blueGrey,
+                  //       borderRadius: BorderRadius.circular(20),
+                  //     ),
+                  //     child: const Text(
+                  //       "search",
+                  //       style: TextStyle(fontSize: 28, color: Colors.white),
+                  //     ),
+                  //   ),
+                  //   onTap: () {
+                  //     setState(() {});
+                  //     // print(Searchuser.text);
+                  //   },
+                  // )
                 ],
               ),
             ),
@@ -168,6 +169,7 @@ class _searchPageState extends State<searchPage> {
                                     Navigator.pop(context);
                                     // ignore: use_build_context_synchronously
 
+                                    // ignore: use_build_context_synchronously
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -185,13 +187,31 @@ class _searchPageState extends State<searchPage> {
                               },
                             );
                           } else {
-                            return const Text("NO User Found");
+                            // return const Text("....");
+                            return Center(
+                              child: Text(
+                                "....",
+                                style: TextStyle(fontSize: 28),
+                              ),
+                            );
                           }
                         } else {
-                          return const Text("NO user found");
+                          return Center(
+                              child: Text(
+                                "no user found",
+                                style: TextStyle(fontSize: 28),
+                              ),
+                            );
+                          // return const Text();
                         }
                       } else {
-                        return const Text("No user found");
+                        return Center(
+                              child: Text(
+                                "no user found",
+                                style: TextStyle(fontSize: 28),
+                              ),
+                            );
+                        // return const Text();
                       }
                     }),
               ),

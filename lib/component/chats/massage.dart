@@ -23,11 +23,12 @@ class Massage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        final docuid= futursnapshot.data?.currentUser;
+        final docuid = futursnapshot.data?.currentUser;
         return StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('Chat')
-              .doc(ChatRoom).collection('Massage')
+              .doc(ChatRoom)
+              .collection('Massage')
               .orderBy('Createdat', descending: true)
               .snapshots(),
           builder: (context, chatsnapshot) {
@@ -41,18 +42,31 @@ class Massage extends StatelessWidget {
             return ListView.builder(
               itemCount: docmassage?.length,
               itemBuilder: (context, index) {
-                // ignore: no_leading_underscores_for_local_identifiers
-                final _date = (docmassage?[index]['isvanish']);
-                if(true){
-                  massagePop(docmassage?[index]['Text'],
+                final isvanishday =
+                    DateTime.now().day - docmassage?[index]['isvanishDay'];
+                final isvanishTime =
+                    DateTime.now().hour - docmassage?[index]['isvanishTime'];
+                print("Time : ${isvanishTime}");
+                print("Day : ${isvanishday}");
+                print(DateTime.now().hour);
+                if (isvanishday >= 1 && isvanishTime >= 0) {
+                  // print("Entered");
+                  FirebaseFirestore.instance
+                      .collection('Chat')
+                      .doc(ChatRoom)
+                      .collection('Massage')
+                      .doc(docmassage?[index].id)
+                      .delete();
+                }
+
+                return massagePop(
+                  docmassage?[index]['Text'],
                   docmassage?[index]['Username'],
-                  docmassage?[index]['UserId']==docuid?.uid?true:false,
-                  // docmassage?[index]['UserId']==docuid?.uid?
+                  docmassage?[index]['UserId'] == docuid?.uid ? true : false,
                   docmassage?[index]['userProf'],
-                  );
-                  reverse: true;
-                }                
-              }
+                );
+              },
+              reverse: true,
             );
           },
         );

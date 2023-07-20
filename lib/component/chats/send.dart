@@ -70,7 +70,8 @@ class _SndState extends State<Snd> {
         .add({
       'Text': entermassage,
       'Createdat': Timestamp.now(),
-      'isvanish':DateFormat.d().format(DateTime.now()),
+      'isvanishTime':DateTime.now().hour,
+      'isvanishDay':DateTime.now().day,
       'UserId': auth?.uid,
       'Username': user['Username'],
       'userProf': user['profile_img_url'],
@@ -87,10 +88,10 @@ class _SndState extends State<Snd> {
       } catch (err) {
         print(err);
       }
-      print("Response : $res");
+      // print("Response : $res");
     });
 
-    print(roomID);
+    // print(roomID);
   }
 
   @override
@@ -115,7 +116,7 @@ class _SndState extends State<Snd> {
           ),
           IconButton(
               onPressed: () {
-                print(widget.RoomId);
+                // print(widget.RoomId);
                 entermassage.trim().isEmpty ? null : sndmassage();
               },
               icon: const Icon(Icons.send))
