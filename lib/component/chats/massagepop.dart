@@ -18,7 +18,8 @@ class massagePop extends StatelessWidget {
         const SizedBox(
           height: 4,
         ),
-        Container(
+        AnimatedContainer(
+          duration: Duration(seconds: 1),
           margin: !_isme
               ? const EdgeInsets.only(left: 6)
               : const EdgeInsets.only(right: 6),
@@ -27,7 +28,6 @@ class massagePop extends StatelessWidget {
             mainAxisAlignment:
                 _isme ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-               
               const SizedBox(
                 width: 5,
               ),
@@ -42,7 +42,8 @@ class massagePop extends StatelessWidget {
         const SizedBox(
           height: 4,
         ),
-        Container(
+        AnimatedContainer(
+          duration: Duration(seconds: 2),
           margin: _isme
               ? const EdgeInsets.only(right: 6)
               : const EdgeInsets.only(left: 6),

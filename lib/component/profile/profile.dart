@@ -8,8 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class profilePage extends StatefulWidget {
-  final void Function(bool isEdit) _isedited;
-  profilePage(this._isedited);
+  // final void Function(bool isEdit) _isedited;
+  profilePage();
 
   @override
   State<profilePage> createState() => _profilePageState();
@@ -120,7 +120,7 @@ class _profilePageState extends State<profilePage> {
           ),
         );
       });
-      widget._isedited(true);
+      // widget._isedited(true);
     }
   }
 
@@ -133,18 +133,8 @@ class _profilePageState extends State<profilePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(left: 18, top: 20),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    size: 30,
-                  ),
-                ),
+              SizedBox(
+                height: 55,
               ),
               Container(
                 child: CircleAvatar(
@@ -357,7 +347,7 @@ class _profilePageState extends State<profilePage> {
                         // },
                       ),
                     ),
-                    const SizedBox(height: 200),
+                    const SizedBox(height: 80),
                     Container(
                       width: 250,
                       height: 50,

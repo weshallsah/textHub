@@ -56,9 +56,9 @@ class _chatBoxState extends State<chatBox> {
     super.initState();
   }
 
-  void _isedited(bool isEdit) {
-    getData();
-  }
+  // void _isedited(bool isEdit) {
+  //   getData();
+  // }
 
   String RoomID = '';
 
@@ -84,71 +84,71 @@ class _chatBoxState extends State<chatBox> {
           ),
         ],
       ),
-      drawer: Drawer(
-        // backgroundColor: Colors.black,
+      // drawer: Drawer(
+      //   // backgroundColor: Colors.black,
         
-        // backgroundColor: const Color.fromRGBO(50, 75, 205, 1),
-        child: ListView(children: [
-          DrawerHeader(
-            decoration:
-                const BoxDecoration(color: Color.fromARGB(255, 142, 196, 240)),
-            child: Column(
-              children: [
-                SizedBox(height: 5),
-                Center(
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage:
-                        profilimage != null ? NetworkImage(profilimage!) : null,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(userName!,
-                    style: const TextStyle(fontSize: 20, color: Colors.white)),
-              ],
-            ),
-          ),
-          const Divider(thickness: .06, color: Color.fromARGB(255, 30, 29, 29)),
-          ListTile(
-            iconColor: Colors.blueAccent,
-            leading: const Icon(Icons.person),
-            title:
-                const Text('My Profile', style: TextStyle(color: Colors.black)),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => profilePage(_isedited),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            iconColor: Colors.blueAccent,
-            leading: const Icon(Icons.settings),
-            title: const Text('Setting', style: TextStyle(color: Colors.black)),
-            onTap: () {
-              // Add Navigation logic here
-            },
-          ),
-          ListTile(
-            iconColor: Colors.blueAccent,
-            leading: const Icon(Icons.question_mark),
-            title: const Text('About', style: TextStyle(color: Colors.black)),
-            onTap: () {
-              showAboutDialog(
-                context: context,
-                applicationName: "ChatBox",
-                applicationVersion: "0.0.2",
-                // useRootNavigator:
-                children: [
-                  const Text("app is under devlopment"),
-                ],
-              );
-            },
-          ),
-        ]),
-      ),
+      //   // backgroundColor: const Color.fromRGBO(50, 75, 205, 1),
+      //   child: ListView(children: [
+      //     DrawerHeader(
+      //       decoration:
+      //           const BoxDecoration(color: Color.fromARGB(255, 142, 196, 240)),
+      //       child: Column(
+      //         children: [
+      //           SizedBox(height: 5),
+      //           Center(
+      //             child: CircleAvatar(
+      //               radius: 40,
+      //               backgroundImage:
+      //                   profilimage != null ? NetworkImage(profilimage!) : null,
+      //             ),
+      //           ),
+      //           const SizedBox(height: 10),
+      //           Text(userName!,
+      //               style: const TextStyle(fontSize: 20, color: Colors.white)),
+      //         ],
+      //       ),
+      //     ),
+      //     const Divider(thickness: .06, color: Color.fromARGB(255, 30, 29, 29)),
+      //     ListTile(
+      //       iconColor: Colors.blueAccent,
+      //       leading: const Icon(Icons.person),
+      //       title:
+      //           const Text('My Profile', style: TextStyle(color: Colors.black)),
+      //       onTap: () {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (context) => profilePage(_isedited),
+      //           ),
+      //         );
+      //       },
+      //     ),
+      //     ListTile(
+      //       iconColor: Colors.blueAccent,
+      //       leading: const Icon(Icons.settings),
+      //       title: const Text('Setting', style: TextStyle(color: Colors.black)),
+      //       onTap: () {
+      //         // Add Navigation logic here
+      //       },
+      //     ),
+      //     ListTile(
+      //       iconColor: Colors.blueAccent,
+      //       leading: const Icon(Icons.question_mark),
+      //       title: const Text('About', style: TextStyle(color: Colors.black)),
+      //       onTap: () {
+      //         showAboutDialog(
+      //           context: context,
+      //           applicationName: "ChatBox",
+      //           applicationVersion: "0.0.2",
+      //           // useRootNavigator:
+      //           children: [
+      //             const Text("app is under devlopment"),
+      //           ],
+      //         );
+      //       },
+      //     ),
+      //   ]),
+      // ),
       body: SafeArea(
         // color: Colors.amber,
 
@@ -225,21 +225,21 @@ class _chatBoxState extends State<chatBox> {
               }
             }),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const searchPage(),
-            ),
-          );
-          // shownotifi("vishal", "hello");
-          // LocalNotification().shownotification("title", "body", 'item x');
-        },
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => const searchPage(),
+      //       ),
+      //     );
+      //     // shownotifi("vishal", "hello");
+      //     // LocalNotification().shownotification("title", "body", 'item x');
+      //   },
+      //   child: const Icon(
+      //     Icons.add,
+      //   ),
+      // ),
     );
   }
 }

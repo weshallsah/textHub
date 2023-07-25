@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
-
+late MediaQueryData queryData;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -90,6 +90,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var querydata=MediaQuery.of(context);
+    print(querydata.size);
     return MaterialApp(
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,

@@ -49,7 +49,7 @@ class Massage extends StatelessWidget {
                 print("Time : ${isvanishTime}");
                 print("Day : ${isvanishday}");
                 print(DateTime.now().hour);
-                if (isvanishday >= 1 && isvanishTime >= 0) {
+                if (isvanishday == 1 && isvanishTime >= 0) {
                   // print("Entered");
                   FirebaseFirestore.instance
                       .collection('Chat')
@@ -58,7 +58,14 @@ class Massage extends StatelessWidget {
                       .doc(docmassage?[index].id)
                       .delete();
                 }
-
+                if(isvanishday>=2){
+                  FirebaseFirestore.instance
+                      .collection('Chat')
+                      .doc(ChatRoom)
+                      .collection('Massage')
+                      .doc(docmassage?[index].id)
+                      .delete();
+                }
                 return massagePop(
                   docmassage?[index]['Text'],
                   docmassage?[index]['Username'],

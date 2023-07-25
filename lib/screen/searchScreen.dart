@@ -53,16 +53,14 @@ class _searchPageState extends State<searchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back)),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
           centerTitle: true,
           title: const Text(
             "Search",
             style: TextStyle(
-              fontWeight: FontWeight.w400,
+              color: Colors.black,
+              // fontWeight: FontWeight.w400,
               fontSize: 24,
             ),
           ),
@@ -198,7 +196,7 @@ class _searchPageState extends State<searchPage> {
                         } else {
                           return Center(
                               child: Text(
-                                "no user found",
+                                "....",
                                 style: TextStyle(fontSize: 28),
                               ),
                             );
@@ -207,7 +205,7 @@ class _searchPageState extends State<searchPage> {
                       } else {
                         return Center(
                               child: Text(
-                                "no user found",
+                                "....",
                                 style: TextStyle(fontSize: 28),
                               ),
                             );
