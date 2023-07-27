@@ -1,4 +1,5 @@
 import 'package:chatbot/Nev/nevbar.dart';
+import 'package:chatbot/component/chats/frendprev.dart';
 import 'package:chatbot/component/chats/massage.dart';
 import 'package:chatbot/landingpage/landingpage.dart';
 import 'package:chatbot/screen/ChatBox.dart';
@@ -69,8 +70,9 @@ class _MyAppState extends State<MyApp> {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              // return chatBox();
-              return NevBar();
+              return chatBox();
+              // return prev();
+              // return NevBar();
             }
             return const RegisterScreen();
           }),

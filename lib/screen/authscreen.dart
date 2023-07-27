@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
-late MediaQueryData queryData;
+// late MediaQueryData queryData;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submitForm(String email, String password, String username, bool islogin,
       File? Img) async {
-        var fcmToken = await FirebaseMessaging.instance.getToken();
+    var fcmToken = await FirebaseMessaging.instance.getToken();
     // ignore: non_constant_identifier_names
     UserCredential Futher;
     var imgurl;
@@ -37,41 +37,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (islogin) {
         Futher = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
-        await FirebaseFirestore.instance.collection('user').doc(Futher.user?.uid).update({
-          'Noti_Id':fcmToken,
+        await FirebaseFirestore.instance
+            .collection('user')
+            .doc(Futher.user?.uid)
+            .update({
+          'Noti_Id': fcmToken,
         });
       } else {
         Futher = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
-        if(Img!=null){
-          final ref = FirebaseStorage.instance
-            .ref()
-            .child('Prof_Img')
-            .child('${Futher.user?.uid}.jpg',);
-        
-        UploadTask uploadTask = ref.putFile(Img);
-        await uploadTask.whenComplete(() async {
-          imgurl = await ref.getDownloadURL();
-          print("complete");
-          // return Future.delayed(
-          //   const Duration(minutes: 1),
-          // );
-        });
-        }
-        
+        if (Img != null) {
+          final ref = FirebaseStorage.instance.ref().child('Prof_Img').child(
+                '${Futher.user?.uid}.jpg',
+              );
 
+          UploadTask uploadTask = ref.putFile(Img);
+          await uploadTask.whenComplete(() async {
+            imgurl = await ref.getDownloadURL();
+            print("complete");
+            // return Future.delayed(
+            //   const Duration(minutes: 1),
+            // );
+          });
+        }
 
         await FirebaseFirestore.instance
             .collection('user')
             .doc(Futher.user?.uid)
             .set(
           {
-            'Noti_Id':fcmToken,
+            'Noti_Id': fcmToken,
             'Username': username,
             'Email': email,
-            'profile_img_url':imgurl ?? "",
-            'uid':Futher.user?.uid,
+            'profile_img_url': imgurl ?? "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d",
+            'uid': Futher.user?.uid,
           },
         ).whenComplete(() => null);
         // uploadimg(Img);
@@ -90,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var querydata=MediaQuery.of(context);
+    var querydata = MediaQuery.of(context);
     print(querydata.size);
     return MaterialApp(
       theme: ThemeData(

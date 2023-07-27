@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../component/chats/frendprev.dart';
 
 class chatBox extends StatefulWidget {
   chatBox();
@@ -21,8 +22,6 @@ class _chatBoxState extends State<chatBox> {
   String? docs;
   // Map<String,dynamic>? Frindid;
   String? roomId;
-
-  
 
   Future getData() async {
     await FirebaseFirestore.instance
@@ -44,10 +43,6 @@ class _chatBoxState extends State<chatBox> {
     // print('geting data: $docs');
   }
 
-  
-
-  
-
   @override
   void initState() {
     getData();
@@ -66,164 +61,168 @@ class _chatBoxState extends State<chatBox> {
   Widget build(BuildContext context) {
     // String _Date = DateFormat.LLL().toString();
     // print(DateFormat.d().format(DateTime.now()));
-    return Scaffold(
-      appBar: AppBar(
-        // leading: Icon(Icons.menu,color: colors.,),
-        
-        backgroundColor: Colors.white54,
-        foregroundColor: Colors.black,
-        elevation: 0,
-        title: const Text('Chathub',style: TextStyle(fontSize: 24),),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            icon: const Icon(Icons.logout_outlined),
-          ),
-        ],
-      ),
-      // drawer: Drawer(
-      //   // backgroundColor: Colors.black,
-        
-      //   // backgroundColor: const Color.fromRGBO(50, 75, 205, 1),
-      //   child: ListView(children: [
-      //     DrawerHeader(
-      //       decoration:
-      //           const BoxDecoration(color: Color.fromARGB(255, 142, 196, 240)),
-      //       child: Column(
-      //         children: [
-      //           SizedBox(height: 5),
-      //           Center(
-      //             child: CircleAvatar(
-      //               radius: 40,
-      //               backgroundImage:
-      //                   profilimage != null ? NetworkImage(profilimage!) : null,
-      //             ),
-      //           ),
-      //           const SizedBox(height: 10),
-      //           Text(userName!,
-      //               style: const TextStyle(fontSize: 20, color: Colors.white)),
-      //         ],
-      //       ),
-      //     ),
-      //     const Divider(thickness: .06, color: Color.fromARGB(255, 30, 29, 29)),
-      //     ListTile(
-      //       iconColor: Colors.blueAccent,
-      //       leading: const Icon(Icons.person),
-      //       title:
-      //           const Text('My Profile', style: TextStyle(color: Colors.black)),
-      //       onTap: () {
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (context) => profilePage(_isedited),
-      //           ),
-      //         );
-      //       },
-      //     ),
-      //     ListTile(
-      //       iconColor: Colors.blueAccent,
-      //       leading: const Icon(Icons.settings),
-      //       title: const Text('Setting', style: TextStyle(color: Colors.black)),
-      //       onTap: () {
-      //         // Add Navigation logic here
-      //       },
-      //     ),
-      //     ListTile(
-      //       iconColor: Colors.blueAccent,
-      //       leading: const Icon(Icons.question_mark),
-      //       title: const Text('About', style: TextStyle(color: Colors.black)),
-      //       onTap: () {
-      //         showAboutDialog(
-      //           context: context,
-      //           applicationName: "ChatBox",
-      //           applicationVersion: "0.0.2",
-      //           // useRootNavigator:
-      //           children: [
-      //             const Text("app is under devlopment"),
-      //           ],
-      //         );
-      //       },
-      //     ),
-      //   ]),
-      // ),
-      body: SafeArea(
-        // color: Colors.amber,
+    final screensize = MediaQuery.of(context).size;
+    // final logohigh = ,
+    //     logowidth = ;
 
-        child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Chat')
-                .where(docs.toString(), isEqualTo: true)
-                .where("Ismess", isEqualTo: true)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.hasData) {
-                  final FrndList = snapshot.data?.docs;
-                  if (FrndList != null && FrndList.length > 0) {
-                    return ListView.builder(
-                      itemCount: FrndList.length,
-                      itemBuilder: (context, index) {
-                        roomId = FrndList[index]['ChatRoomId'];
-                        Map Frindid = FrndList[index]['FrndConver'];
-                        String? uid;
-                        Frindid.forEach(
-                          (key, value) => {
-                            if (key != myuid) {uid = key}
-                          },
-                        );
-                        // print(uid);
-                        // final mynotification = FrndList[index]['NotificationID'][''];
-                        return Container(
-                          padding: const EdgeInsets.only(
-                              left: 8, bottom: 10, right: 8, top: 10),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              // radius: 40,
-                              backgroundImage:
-                                  FrndList[index]['ProfImg'] != null
-                                      ? NetworkImage(FrndList[index]['ProfImg'])
-                                      : null,
-                            ),
-                            title: Text(
-                              FrndList[index]['Username'],
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            // subtitle: Text(""),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => chatRoom(
-                                    RoomId: roomId,
-                                    userPic: FrndList[index]['ProfImg'],
-                                    username: FrndList[index]['Username'],
-                                    userID: uid,
-                                  ),
-                                ),
-                              );
-                            },
+    return Scaffold(
+      body: GestureDetector(
+        onHorizontalDragUpdate: (details) {
+          // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+          int sensitivity = 8;
+          if (details.delta.dx > sensitivity) {
+            // Right Swipe
+          } else if (details.delta.dx < -sensitivity) {
+            //Left Swipe
+          }
+        },
+        child: SafeArea(
+          // color: Colors.amber,
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(0),
+                    margin: EdgeInsets.only(
+                        top: screensize.height * 0.05,
+                        left: screensize.width * 0.08),
+                    height: screensize.height * 0.03,
+                    width: screensize.width * 0.26,
+                    child: Row(
+                      children: [
+                        const Text(
+                          "Text ",
+                          style: TextStyle(
+                            fontFamily: "poppins",
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
                           ),
-                        );
-                      },
-                    );
-                  } else {
-                    return Container();
-                  }
-                } else {
-                  return Container();
-                }
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+                        ),
+                        Container(
+                          height: screensize.height * 0.04,
+                          width: screensize.width * 0.14,
+                          padding: EdgeInsets.all(0),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(9)),
+                          child: const Text(
+                            "Hub",
+                            style: TextStyle(
+                              fontFamily: "poppins",
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Container(
+                      width: screensize.width * 0.30,
+                      height: screensize.height * 0.038,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                          // color: Colors.amber,
+                          // backgroundBlendMode: /,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1,
+                          )),
+                      margin: EdgeInsets.only(
+                        top: screensize.height * 0.049,
+                        left: screensize.width * 0.29,
+                      ),
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(0),
+                      child: const Text(
+                        "Archived",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: "poppins",
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.all(0),
+                margin: EdgeInsets.only(
+                  top: screensize.height * 0.03,
+                  left: screensize.width * 0.07,
+                ),
+                height: screensize.height * 0.059,
+                width: screensize.width * 0.58,
+                // color: Colors.amber,
+                alignment: Alignment.center,
+                child: const FittedBox(
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain,
+                  child: Text(
+                    "Recent Chats",
+                    style: TextStyle(
+                      fontSize: (48),
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "poppins",
+                    ),
+                  ),
+                ),
+              ),
+              // prev(),
+              Container(
+                // padding: EdgeInsets.all(0),
+                child: Expanded(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('Chat')
+                        .where(docs.toString(), isEqualTo: true)
+                        .where("Ismess", isEqualTo: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final FrndList = snapshot.data?.docs;
+                        if (FrndList != null && FrndList.length > 0) {
+                          return ListView.builder(
+                              itemCount: FrndList.length,
+                              itemBuilder: (context, index) {
+                                Map Frindid = FrndList[index]['FrndConver'];
+                                String? uid;
+                                Frindid.forEach(
+                                  (key, value) => {
+                                    if (key != myuid) {uid = key}
+                                  },
+                                );
+                                return prev(
+                                  FrndList[index]['Username'],
+                                  FrndList[index]['ProfImg'],
+                                  FrndList[index]['ChatRoomId'],
+                                  uid,
+                                );
+                              });
+                        } else {
+                          return Container();
+                        }
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {

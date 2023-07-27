@@ -26,10 +26,17 @@ class _NevBarState extends State<NevBar> {
 
   @override
   Widget build(BuildContext context) {
+    final screensize = MediaQuery.of(context).size;
+    final nevhight = screensize.height * 0.085;
+    final nevwidth = screensize.width * 0.792;
+    print(screensize.width);
+    print(nevwidth);
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: Container(
-        height: 80,
+        height: nevhight,
+        width: nevwidth,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(1))
@@ -38,19 +45,26 @@ class _NevBarState extends State<NevBar> {
           color: Colors.black,
         ),
         // color: Colors.amber,
-        margin: EdgeInsets.only(left: 30,right: 30,top: 8,bottom: 2),
-        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+        margin: EdgeInsets.only(
+            left: screensize.width * 0.104,
+            right: screensize.width * 0.104,
+            bottom: screensize.height * 0.058),
+        // padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
         child: SafeArea(
           child: GNav(
             tabBorderRadius: 30,
             // tabActiveBorder:Border.all(color: Colors.white, width: 1), // tab button border
             // tabBorder: Border.all(color: Colors.black, width: 1),
-            tabShadow: [BoxShadow(color: Color.fromARGB(255, 29, 29, 29).withOpacity(0.5), blurRadius: 8)],
+            tabShadow: [
+              BoxShadow(
+                  color: Color.fromARGB(255, 29, 29, 29).withOpacity(0.5),
+                  blurRadius: 8)
+            ],
             gap: 4,
             duration: Duration(milliseconds: 500),
             rippleColor: Colors.grey,
             hoverColor: Colors.grey,
-            tabs: [
+            tabs: const [
               GButton(
                 icon: Icons.home,
                 text: "Home",
