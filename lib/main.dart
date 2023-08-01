@@ -1,9 +1,14 @@
 import 'package:chatbot/Nev/nevbar.dart';
+import 'package:chatbot/component/Auth/verify.dart';
+import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
 import 'package:chatbot/component/chats/frendprev.dart';
-import 'package:chatbot/component/chats/massage.dart';
+import 'package:chatbot/component/chats/message.dart';
+import 'package:chatbot/component/listFrnd.dart';
 import 'package:chatbot/landingpage/landingpage.dart';
 import 'package:chatbot/screen/ChatBox.dart';
+import 'package:chatbot/screen/HomeScreen.dart';
 import 'package:chatbot/screen/authscreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +16,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
 // import 'package:firebase_analytics/firebase_analytics.dart';
+import 'component/Auth/Forgot.dart';
 import 'component/chats/massagepop.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'component/theme/theme.dart';
 // import 'dart:async';
 
 FlutterLocalNotificationsPlugin notifcation = FlutterLocalNotificationsPlugin();
@@ -48,7 +57,7 @@ void main() async {
   );
   // print(result);
   // print(initialized);
-    // queryData = MediaQuery.of(context as BuildContext);
+  // queryData = MediaQuery.of(context as BuildContext);
 
   runApp(const MyApp());
 }
@@ -61,21 +70,32 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
+  late final isuser;
   @override
   Widget build(BuildContext context) {
+    final _brigth = "dark";
     // final size = MediaQuery.of(context).size;
-    return MaterialApp(
-      home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return chatBox();
-              // return prev();
-              // return NevBar();
-            }
-            return const RegisterScreen();
-          }),
+    return ScreenUtilInit(
+      designSize: Size(375, 812),
+      minTextAdapt: true,
+      scaleByHeight: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          themeMode: ThemeMode.dark,
+          darkTheme: AppTheme.darkTheme,
+          theme: AppTheme.LigthTheme,
+          home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Home();
+              }
+              return RegisterScreen();
+            },
+          ),
+        );
+      },
     );
   }
 }

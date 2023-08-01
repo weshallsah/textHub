@@ -9,6 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 // late MediaQueryData queryData;
 
 class RegisterScreen extends StatefulWidget {
@@ -21,15 +24,16 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _auth = FirebaseAuth.instance;
   var isloading = false;
+  bool islogin = false;
 
   // ignore: non_constant_identifier_names
 
-  void _submitForm(String email, String password, String username, bool islogin,
-      File? Img) async {
+  void _submitForm(String Firstname, String Lastname, String email,
+      String password, String username) async {
     var fcmToken = await FirebaseMessaging.instance.getToken();
     // ignore: non_constant_identifier_names
     UserCredential Futher;
-    var imgurl;
+    // var imgurl;
     try {
       setState(() {
         isloading = !isloading;
@@ -47,69 +51,88 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Futher = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
-        if (Img != null) {
-          final ref = FirebaseStorage.instance.ref().child('Prof_Img').child(
-                '${Futher.user?.uid}.jpg',
-              );
-
-          UploadTask uploadTask = ref.putFile(Img);
-          await uploadTask.whenComplete(() async {
-            imgurl = await ref.getDownloadURL();
-            print("complete");
-            // return Future.delayed(
-            //   const Duration(minutes: 1),
-            // );
-          });
-        }
-
         await FirebaseFirestore.instance
             .collection('user')
             .doc(Futher.user?.uid)
             .set(
           {
             'Noti_Id': fcmToken,
+            'firstname': Firstname,
+            'lastname': Lastname,
             'Username': username,
             'Email': email,
-            'profile_img_url': imgurl ?? "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d",
+            'profile_img_url':
+                "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d",
             'uid': Futher.user?.uid,
+            'isvarify': false,
           },
         ).whenComplete(() => null);
-        // uploadimg(Img);
       }
     } on PlatformException catch (err) {
-      // ignore: unused_local_variable
       var errMassage = "please enter valid cerdential";
       if (err.message != null) {
         errMassage = err.message as String;
+        SnackBar(
+          content: Text(
+            errMassage,
+            style: TextStyle(color: Colors.red),
+          ),
+        );
       }
     } catch (err) {
-      // ignore: avoid_print
       print(err);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var querydata = MediaQuery.of(context);
-    print(querydata.size);
-    return MaterialApp(
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        brightness: Brightness.light,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            shape: MaterialStatePropertyAll(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 71.h,
+        title: Container(
+          margin: EdgeInsets.only(
+            left: 34.w,
+            top: 40.h,
+          ),
+          width: 313.w,
+          height: 70.h,
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                // margin: EdgeInsets.only(
+                //   top: 40.h,
+                //   left: 34.w,
+                // ),
+                child: Text(
+                  "Text",
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            backgroundColor: MaterialStatePropertyAll(Colors.blueGrey.shade400),
+              Container(
+                margin: EdgeInsets.only(
+                  left: 4.w,
+                  // top: 40.h,
+                ),
+                height: 30.h,
+                width: 43.w,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    // color: _dragup ? Colors.black : Colors.white,
+                    borderRadius: BorderRadius.circular(4.r)),
+                alignment: Alignment.center,
+                child: Text(
+                  "Hub",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+            ],
           ),
         ),
       ),
-      home: Scaffold(
-        body: Authfrom(_submitForm, isloading),
-      ),
+      body: Authfrom(_submitForm, isloading, islogin),
     );
   }
 }

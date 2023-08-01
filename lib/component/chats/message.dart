@@ -6,11 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Massage extends StatelessWidget {
+class message extends StatelessWidget {
   // ignore: non_constant_identifier_names, prefer_typing_uninitialized_variables
   final ChatRoom;
   // ignore: use_key_in_widget_constructors
-  const Massage({this.ChatRoom});
+  const message({this.ChatRoom});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class Massage extends StatelessWidget {
           stream: FirebaseFirestore.instance
               .collection('Chat')
               .doc(ChatRoom)
-              .collection('Massage')
+              .collection('Message')
               .orderBy('Createdat', descending: true)
               .snapshots(),
           builder: (context, chatsnapshot) {
