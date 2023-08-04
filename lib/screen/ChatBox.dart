@@ -25,6 +25,7 @@ class chatBox extends StatefulWidget {
 
 class _chatBoxState extends State<chatBox> {
   
+  
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(

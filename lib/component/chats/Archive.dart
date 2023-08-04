@@ -47,7 +47,7 @@ class _ArchiveState extends State<Archive> {
                       child: Text(
                         "Text",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w700,
                         ),
@@ -62,14 +62,14 @@ class _ArchiveState extends State<Archive> {
                       height: 30.h,
                       width: 43.w,
                       decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(4.r)),
                       alignment: Alignment.center,
                       child: Text(
                         "Hub",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w700,
                         ),
@@ -94,6 +94,7 @@ class _ArchiveState extends State<Archive> {
                         fit: BoxFit.fitWidth,
                         child: Icon(
                           Icons.archive_outlined,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -107,6 +108,7 @@ class _ArchiveState extends State<Archive> {
                       child: Text(
                         "Archive",
                         style: TextStyle(
+                          color: Colors.white,
                           fontSize: 32.sp,
                           fontWeight: FontWeight.w700,
                           fontFamily: "Poppins",
@@ -115,7 +117,11 @@ class _ArchiveState extends State<Archive> {
                     )
                   ],
                 ),
-                ListFrnd(docs: widget.Docs,myuid: widget.Myuid,isarchiv: true,)
+                ListFrnd(
+                  docs: widget.Docs,
+                  myuid: widget.Myuid,
+                  isarchiv: true,
+                )
               ],
             ),
           ),

@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chatbot/module/database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -160,27 +158,18 @@ class _forgotState extends State<forgot> {
                         return null;
                       },
                       onChanged: (value) {
-                        setState(() {
-                          _email = value;
-                        });
+                        setState(
+                          () {
+                            _email = value;
+                          },
+                        );
                       },
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      if (_email == null ||
-                          !_email.contains("@") ||
-                          !_email.contains(".")) {
-                        SnackBar(
-                          content: Text("Enter valid EmailID"),
-                        );
-                      } else {
-                        SnackBar(
-                          content: Text("link was sended"),
-                        );
-                        FirebaseAuth.instance
-                            .sendPasswordResetEmail(email: _email);
-                      }
+                      final forgot = DatabaseAuth();
+                      forgot.forget(_email);
                     },
                     child: Container(
                       margin: EdgeInsets.only(

@@ -1,31 +1,15 @@
-import 'package:chatbot/Nev/nevbar.dart';
-import 'package:chatbot/component/Auth/verify.dart';
-import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
-import 'package:chatbot/component/chats/frendprev.dart';
-import 'package:chatbot/component/chats/message.dart';
-import 'package:chatbot/component/listFrnd.dart';
-import 'package:chatbot/landingpage/landingpage.dart';
-import 'package:chatbot/screen/ChatBox.dart';
+import 'package:chatbot/component/Auth/auth.dart';
 import 'package:chatbot/screen/HomeScreen.dart';
-import 'package:chatbot/screen/authscreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
-// import 'package:firebase_analytics/firebase_analytics.dart';
-import 'component/Auth/Forgot.dart';
-import 'component/chats/massagepop.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'component/theme/theme.dart';
-// import 'dart:async';
 
 FlutterLocalNotificationsPlugin notifcation = FlutterLocalNotificationsPlugin();
-// late double screenwidth,screenhight;
-// late MediaQueryData queryData;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -47,9 +31,9 @@ void main() async {
     iOS: initializationSettingsIos,
   );
 
-  bool? initialized = await notifcation.initialize(initializationSettings);
+  await notifcation.initialize(initializationSettings);
 
-  var result = await FlutterNotificationChannel.registerNotificationChannel(
+  await FlutterNotificationChannel.registerNotificationChannel(
     description: 'message Nofication',
     id: 'chats',
     importance: NotificationImportance.IMPORTANCE_HIGH,
@@ -73,7 +57,7 @@ class _MyAppState extends State<MyApp> {
   late final isuser;
   @override
   Widget build(BuildContext context) {
-    final _brigth = "dark";
+    // final _brigth = "dark";
     // final size = MediaQuery.of(context).size;
     return ScreenUtilInit(
       designSize: Size(375, 812),
@@ -91,7 +75,7 @@ class _MyAppState extends State<MyApp> {
               if (snapshot.hasData) {
                 return Home();
               }
-              return RegisterScreen();
+              return Auth();
             },
           ),
         );

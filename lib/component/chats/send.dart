@@ -41,6 +41,7 @@ class _SndState extends State<Snd> {
     // print(roomID);
     FirebaseFirestore.instance.collection('Chat').doc(roomID).update({
       'Ismess': true,
+      'Recent':DateTime.now(),
     });
     await FirebaseFirestore.instance
         .collection('user')
@@ -108,11 +109,11 @@ class _SndState extends State<Snd> {
         Container(
           // color: Colors.amber,
           padding: EdgeInsets.all(0),
-          margin: EdgeInsets.only(
-            top: 21.h,
-            bottom: 45.h,
-            left: 23.w,
-          ),
+          // margin: EdgeInsets.only(
+          //   top: 21.h,
+          //   bottom: 45.h,
+          //   left: 23.w,
+          // ),
           height: 63.h,
           width: 280.w,
           child: TextField(
@@ -152,8 +153,9 @@ class _SndState extends State<Snd> {
         Center(
           child: Container(
             height: 40.h,
+            // color: Colors.amber,
             width: 40.w,
-            margin: EdgeInsets.only(left: 5.w, bottom: 58.h, top: 21.h),
+            // margin: EdgeInsets.only(left: 5.w, bottom: 58.h, top: 21.h),
             child: FittedBox(
               fit: BoxFit.cover,
               child: IconButton(

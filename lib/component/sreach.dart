@@ -1,3 +1,4 @@
+import 'package:chatbot/screen/searchScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class searchBox extends StatefulWidget {
-  const searchBox({super.key});
+  searchBox();
 
   @override
   State<searchBox> createState() => _searchBoxState();
@@ -41,7 +42,16 @@ class _searchBoxState extends State<searchBox> {
           child: IconButton(
             padding: EdgeInsets.all(0),
             iconSize: 30.sp,
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => searchPage(),
+                  ),
+                );
+              });
+            },
             icon: Icon(Icons.search),
           ),
         ),
