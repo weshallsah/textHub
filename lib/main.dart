@@ -1,5 +1,8 @@
 import 'package:chatbot/component/Auth/auth.dart';
+import 'package:chatbot/component/Auth/uploadAvtar.dart';
+import 'package:chatbot/component/Auth/verify.dart';
 import 'package:chatbot/screen/HomeScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,9 +42,6 @@ void main() async {
     importance: NotificationImportance.IMPORTANCE_HIGH,
     name: 'Chat',
   );
-  // print(result);
-  // print(initialized);
-  // queryData = MediaQuery.of(context as BuildContext);
 
   runApp(const MyApp());
 }
@@ -54,11 +54,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final isuser;
+  bool iscomplete = true;
+  void check(bool istrue) {
+    setState(() {
+      iscomplete = istrue;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final _brigth = "dark";
-    // final size = MediaQuery.of(context).size;
     return ScreenUtilInit(
       designSize: Size(375, 812),
       minTextAdapt: true,
@@ -73,9 +77,16 @@ class _MyAppState extends State<MyApp> {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Home();
+                if (snapshot.data!.emailVerified) {
+                  print(iscomplete);
+                  if (iscomplete) {
+                    return Home();
+                  }
+                  return chooseAvtar(check);
+                }
+                return verify();
               }
-              return Auth();
+              return Auth(check);
             },
           ),
         );

@@ -1,8 +1,8 @@
+import 'package:chatbot/component/Auth/uploadAvtar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,21 +14,14 @@ class verify extends StatefulWidget {
 }
 
 class _verifyState extends State<verify> {
+  final auth = FirebaseAuth.instance.currentUser;
   void sendlink() async {
-    final auth = FirebaseAuth.instance.currentUser;
-    auth?.sendEmailVerification().then(
-      (value) async {
-        await FirebaseFirestore.instance.collection('user').doc(auth.uid).update(
-          {
-            'isvarify': true,
-          },
-        );
-      },
-    );
+    auth?.sendEmailVerification();
   }
-
   @override
   Widget build(BuildContext context) {
+    
+    auth?.reload();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 71.h,
@@ -79,77 +72,63 @@ class _verifyState extends State<verify> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            alignment: Alignment.bottomLeft,
             margin: EdgeInsets.only(
-              top: 149.h,
-              left: 39.w,
+              top: 149,
+              left: 39,
             ),
-            width: 251.w,
-            height: 42.h,
             child: Text(
               "Email Verification",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 28.sp,
-                fontWeight: FontWeight.w700,
-                fontFamily: GoogleFonts.poppins().toString(),
               ),
             ),
           ),
           Container(
+            // color: Colors.amber,
             margin: EdgeInsets.only(
-              // top: 149.h,
-              left: 39.w,
+              left: 39,
             ),
-            width: 157.w,
-            height: 20.h,
-            alignment: Alignment.topLeft,
             child: Text(
-              "Get Email Verified.",
+              "Email has been Verified.",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 13.sp,
-                fontWeight: FontWeight.w700,
-                fontFamily: GoogleFonts.poppins().toString(),
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              sendlink();
-            },
+          Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              margin: EdgeInsets.only(
+                top: 140,
+              ),
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(41),
                   topRight: Radius.circular(41),
-                  bottomLeft: Radius.circular(5),
-                  bottomRight: Radius.circular(5),
                 ),
+                color: Colors.white,
               ),
-              margin: EdgeInsets.only(
-                top: 150.h,
-              ),
-              alignment: Alignment.center,
-              height: 340.h,
-              width: 375.w,
-              child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  sendlink();
+                },
                 child: Container(
-                  height: 97.h,
-                  width: 300.w,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(22),
+                  margin: EdgeInsets.symmetric(
+                    vertical: 115,
+                    horizontal: 35,
                   ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Email Verified",
-                    style: TextStyle(
-                      fontFamily: GoogleFonts.poppins().toString(),
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22.r),
+                    color: Colors.black,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Email verify",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

@@ -26,7 +26,8 @@ class DatabaseAuth {
       } else {
         Futher = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
-
+        var isverify = Futher.user?.emailVerified;
+        isverify = false;
         await FirebaseFirestore.instance
             .collection('user')
             .doc(Futher.user?.uid)
@@ -37,10 +38,9 @@ class DatabaseAuth {
             'lastname': Lastname,
             'Username': username,
             'Email': email,
-            'profile_img_url':
+            'Avtar_URL':
                 "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d",
             'uid': Futher.user?.uid,
-            'isvarify': false,
           },
         ).whenComplete(() => null);
       }
@@ -53,13 +53,17 @@ class DatabaseAuth {
       print(err);
     }
   }
-  void forget(String Email){
+
+  void forget(String Email) {
     _auth.sendPasswordResetEmail(email: Email);
   }
 
+  void logout() {
+    _auth.signOut();
+  }
 }
 
-class databasestore{
-  final fireStrore=FirebaseFirestore.instance;
-  
+class databasestore {
+  final fireStrore = FirebaseFirestore.instance;
+  // void avtar
 }

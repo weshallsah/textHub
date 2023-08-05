@@ -253,7 +253,7 @@ class _searchPageState extends State<searchPage> {
                                     child: CircleAvatar(
                                       radius: 30.r,
                                       foregroundImage: NetworkImage(
-                                          searchuser[index]['profile_img_url']),
+                                          searchuser[index]['Avtar_URL']),
                                     ),
                                   ),
                                   title: Column(
@@ -294,10 +294,10 @@ class _searchPageState extends State<searchPage> {
                                     await Future(() => getchatRoom(
                                         searchuser[index]['uid'],
                                         searchuser[index]['Username'],
-                                        searchuser[index]['profile_img_url'],
+                                        searchuser[index]['Avtar_URL'],
                                         searchuser[index]['Noti_Id']));
-                                    print("checking before chatroom");
-                                    print(ChatRoomid);
+                                    // print("checking before chatroom");
+                                    // print(ChatRoomid);
                                     Navigator.pop(context);
                                     // ignore: use_build_context_synchronously
 

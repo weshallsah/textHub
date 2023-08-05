@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Auth extends StatefulWidget {
-  const Auth({super.key});
+  final Function(bool istrue) iscompleter;
+  Auth(this.iscompleter);
 
   @override
   State<Auth> createState() => _AuthState();
@@ -184,6 +185,11 @@ class _AuthState extends State<Auth> {
                       ),
                     GestureDetector(
                       onTap: () {
+                        if(!islogin){
+                          setState(() {
+                            widget.iscompleter(false);
+                          });
+                        }
                         final _auth = DatabaseAuth();
                         _auth.FireAuth(firstname.text, lastname.text,
                             email.text, password.text, username.text, islogin);
@@ -356,3 +362,6 @@ class _teztcontainerState extends State<teztcontainer> {
     );
   }
 }
+
+
+

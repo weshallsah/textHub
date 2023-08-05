@@ -1,8 +1,5 @@
 import 'package:chatbot/screen/searchScreen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class searchBox extends StatefulWidget {
@@ -18,8 +15,6 @@ class _searchBoxState extends State<searchBox> {
     return Row(
       children: [
         Container(
-          height: 48.h,
-          width: 218.w,
           margin: EdgeInsets.only(
             left: 32.w,
             top: 30.h,
@@ -36,8 +31,8 @@ class _searchBoxState extends State<searchBox> {
             left: 68.w,
             top: 30.h,
           ),
-          height: 25.65.h,
-          width: 26.w,
+          // height: 25.65.h,
+          // width: 26.w,
 
           child: IconButton(
             padding: EdgeInsets.all(0),

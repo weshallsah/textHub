@@ -1,17 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:chatbot/Notification/notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart';
-import 'package:intl/intl.dart';
 
 class Snd extends StatefulWidget {
   final RoomId;
@@ -41,7 +34,7 @@ class _SndState extends State<Snd> {
     // print(roomID);
     FirebaseFirestore.instance.collection('Chat').doc(roomID).update({
       'Ismess': true,
-      'Recent':DateTime.now(),
+      'Recent': DateTime.now(),
     });
     await FirebaseFirestore.instance
         .collection('user')
@@ -102,62 +95,64 @@ class _SndState extends State<Snd> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          // color: Colors.amber,
-          padding: EdgeInsets.all(0),
-          // margin: EdgeInsets.only(
-          //   top: 21.h,
-          //   bottom: 45.h,
-          //   left: 23.w,
-          // ),
-          height: 63.h,
-          width: 280.w,
-          child: TextField(
-            style: TextStyle(
-              fontSize: 15,
-              fontFamily: "Poppins",
-            ),
-            controller: _controller,
-            showCursor: _iscursor,
-            onChanged: (value) {
-              setState(() {
-                if (_controller.text == "") {
-                  _iscursor = false;
-                } else {
-                  _iscursor = true;
-                }
-              });
-            },
-            decoration: InputDecoration(
-              hintText: " Type Something",
-              hintStyle: TextStyle(
-                fontSize: 15.sp,
-                color: Color.fromARGB(211, 166, 166, 166),
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Flexible(
+            // fit: ,
+            flex: 3,
+            child: Container(
+              margin: EdgeInsets.only(
+                bottom: 12,
               ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.sp),
-                borderSide: BorderSide(
+              padding: EdgeInsets.all(12),
+              height: 56,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
                   color: Colors.white,
-                  width: 1,
-                  style: BorderStyle.solid,
-                  strokeAlign: BorderSide.strokeAlignCenter,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: TextField(
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontFamily: "Poppins",
+                  color: Colors.white,
+                ),
+                controller: _controller,
+                showCursor: _iscursor,
+                onChanged: (value) {
+                  setState(() {
+                    if (_controller.text == "") {
+                      _iscursor = false;
+                    } else {
+                      _iscursor = true;
+                    }
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: " Type Something",
+                  hintStyle: TextStyle(
+                    fontSize: 15.sp,
+                    color: Color.fromARGB(211, 166, 166, 166),
+                  ),
+                  border: InputBorder.none,
                 ),
               ),
             ),
           ),
-        ),
-        Center(
-          child: Container(
-            height: 40.h,
-            // color: Colors.amber,
-            width: 40.w,
-            // margin: EdgeInsets.only(left: 5.w, bottom: 58.h, top: 21.h),
-            child: FittedBox(
-              fit: BoxFit.cover,
+          Flexible(
+            flex: 1,
+            child: Container(
+              height: 53,
+              margin: EdgeInsets.only(
+                bottom: 12,
+              ),
               child: IconButton(
                 onPressed: () {
                   sndmassage();
@@ -169,8 +164,8 @@ class _SndState extends State<Snd> {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

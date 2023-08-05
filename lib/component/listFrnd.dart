@@ -1,9 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'chats/frendprev.dart';
 
@@ -37,7 +33,7 @@ class _ListFrndState extends State<ListFrnd> {
         if (snapshot.hasData) {
           final FrndList = snapshot.data?.docs;
           if (FrndList != null && FrndList.length > 0) {
-            return Expanded(
+            return Flexible(
               child: ListView.builder(
                 reverse: false,
                 padding: EdgeInsets.all(0),
@@ -52,13 +48,19 @@ class _ListFrndState extends State<ListFrnd> {
                     },
                   );
 
-                  return prev(
-                    FrndList[index]['Username'],
-                    FrndList[index]['ProfImg'],
-                    FrndList[index]['ChatRoomId'],
-                    uid,
-                    widget.isarchiv,
-                    // isarchiv || isdelet ? true : false,
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        prev(
+                          FrndList[index]['Username'],
+                          FrndList[index]['ProfImg'],
+                          FrndList[index]['ChatRoomId'],
+                          uid,
+                          widget.isarchiv,
+                          // isarchiv || isdelet ? true : false,
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),

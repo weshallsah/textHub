@@ -211,25 +211,21 @@ class _chatRoomState extends State<chatRoom> {
     return Scaffold(
       appBar: AppBar(
         // leadingWidth: 30,
-        leadingWidth: 58,
-        toolbarHeight: 90,
+        automaticallyImplyLeading: false,
+
         leading: Container(
-          margin: EdgeInsets.only(left: 28.w, top: 35.h),
           // color: Colors.amber,
-          height: 40.h,
-          width: 40.h,
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: CircleAvatar(
-              // radius: 22,
-              backgroundColor: Colors.blueGrey,
-              foregroundImage:
-                  NetworkImage(widget.userPic != null ? widget.userPic : null),
+          // height: 40,
+          margin: EdgeInsets.only(
+            left: 14,
+          ),
+          child: Image(
+            image: NetworkImage(
+              widget.userPic,
             ),
           ),
         ),
         title: Container(
-          margin: EdgeInsets.only(top: 35.h, left: 6.w),
           child: Text(
             widget.username,
             style: Theme.of(context).textTheme.bodySmall,
@@ -237,24 +233,32 @@ class _chatRoomState extends State<chatRoom> {
         ),
       ),
       body: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          // Note: Sensitivity is integer used when you don't want to mess up vertical drag
-          int sensitivity = 8;
-          if (details.delta.dx > sensitivity) {
-            // Right Swipe
-            print("rigth swipe");
-            Navigator.pop(context);
-          }
-        },
-        child: Column(
-          children: [
-            Expanded(
-              child: message(ChatRoom: widget.RoomId),
-            ),
-            Snd(RoomId: widget.RoomId, userId: widget.userID),
-          ],
-        ),
-      ),
+          onHorizontalDragUpdate: (details) {
+            // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              // Right Swipe
+              print("rigth swipe");
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: message(
+                  ChatRoom: widget.RoomId,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Snd(
+                RoomId: widget.RoomId,
+                userId: widget.userID,
+              ),
+            ],
+          )),
     );
   }
 }

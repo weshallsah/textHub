@@ -1,14 +1,11 @@
 import 'package:chatbot/component/chats/Archive.dart';
+import 'package:chatbot/component/greetme.dart';
+import 'package:chatbot/module/database.dart';
 import 'package:chatbot/screen/ChatBox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../component/greetme.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -18,16 +15,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String _fontfamily = "Poppins";
-  bool _dragup = false;
-  Color _color = Colors.black;
   String? userName = '';
   String? profilimage = '';
   String? myuid = '';
   String? docs;
-  bool _aboutmenu = false;
-  // Map<String,dynamic>? Frindid;
   String? roomId;
+  bool isup = false;
 
   Future getData() async {
     await FirebaseFirestore.instance
@@ -39,7 +32,7 @@ class _HomeState extends State<Home> {
         if (snapshot.exists) {
           setState(() {
             userName = snapshot.data()!['Username'];
-            profilimage = snapshot.data()!['profile_img_url'];
+            profilimage = snapshot.data()!['Avtar_URL'];
             myuid = snapshot.data()!['uid'];
           });
         }
@@ -66,147 +59,107 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // _dragup = false;
-    return ScreenUtilInit(
-      minTextAdapt: true,
-      splitScreenMode: true,
-      designSize: Size(375, 812),
-      builder: (context, child) => Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 71.h,
-          title: Container(
-            margin: EdgeInsets.only(
-              left: 34.w,
-              top: 40.h,
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            Text(
+              "Text",
+              style: TextStyle(color: Colors.white, fontSize: 20.sp),
             ),
-            width: 313.w,
-            height: 70.h,
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(0),
-                  // margin: EdgeInsets.only(
-                  //   top: 40.h,
-                  //   left: 34.w,
-                  // ),
-                  child: Text(
-                    "Text",
-                    style: TextStyle(
-                      fontFamily: GoogleFonts.poppins().toString(),
-                      fontSize: 20.sp,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
+            Flexible(
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  "Hub",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.sp,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: 4.w,
-                    // top: 40.h,
-                  ),
-                  height: 30.h,
-                  width: 43.w,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      // color: _dragup ? Colors.black : Colors.white,
-                      borderRadius: BorderRadius.circular(4.r)),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Hub",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: GoogleFonts.poppins().toString(),
-                      fontSize: 20.sp,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (_dragup) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Archive(
-                            Docs: docs,
-                            Myuid: myuid,
-                          ),
-                        ),
-                      );
-                    } else {
-                      FirebaseAuth.instance.signOut();
-                    }
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      left: _dragup ? 107.w : 145.w,
-                      // top: 40.h,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1,
-                      ),
-                    ),
-                    height: _dragup ? 31.h : 27.h,
-                    width: _dragup ? 113.w : 75.w,
-                    alignment: Alignment.center,
-                    child: Text(
-                      _dragup ? "Archived" : "Logout",
-                      style: TextStyle(
-                          // color: _dragup ? Colors.black : Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: _dragup ? 20.sp : 16.sp),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  if (!_dragup) greetme(),
-                  GestureDetector(
-                    onVerticalDragUpdate: (details) {
-                      int sensitivity = 8;
-                      if (details.delta.dy > sensitivity) {
-                        // Down Swipe
-                        setState(() {
-                          // _color = Colors.black;
-                          _dragup = false;
-                        });
-                        print("draged down");
-                      } else if (details.delta.dy < -sensitivity) {
-                        // Up Swipe
-                        setState(() {
-                          // _color = Colors.white;
-                          _dragup = true;
-                        });
-                        print("draged UP");
-                      }
-                    },
-                    child: Expanded(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.all(0),
-                        physics: ScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        child: chatBox(
-                          drag_: _dragup,
-                          Myuid: myuid,
-                          docs: docs,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
-            ],
+            ),
+          ],
+        ),
+        // titleSpacing: double.infinity,
+
+        actions: [
+          Flexible(
+            child: GestureDetector(
+              onTap: () {
+                if (isup) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Archive(
+                        Docs: docs,
+                        Myuid: myuid,
+                      ),
+                    ),
+                  );
+                } else {
+                  DatabaseAuth().logout();
+                }
+              },
+              child: Container(
+                // height: 27,
+                padding: EdgeInsets.all(4),
+                margin: EdgeInsets.only(
+                  right: 21,
+                  bottom: 11,
+                  top: 12,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.white, width: 1),
+                ),
+                child: Text(
+                  isup ? "Archived" : "Logout",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.sp,
+                  ),
+                ),
+              ),
+            ),
           ),
+        ],
+        elevation: 0,
+      ),
+      body: GestureDetector(
+        onVerticalDragUpdate: (details) {
+          int sensitivity = 8;
+
+          if (details.delta.dy > sensitivity) {
+            setState(
+              () {
+                // print("isup");
+                isup = false;
+              },
+            );
+          } else if (details.delta.dy < -sensitivity) {
+            setState(
+              () {
+                // print("object");
+                isup = true;
+              },
+            );
+            // }
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!isup) greetme(profilimage,userName),
+            chatBox(drag_: isup, docs: docs, Myuid: myuid),
+          ],
         ),
       ),
     );
