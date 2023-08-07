@@ -1,458 +1,367 @@
-// ignore_for_file: sized_box_for_whitespace, use_key_in_widget_constructors
-
-import 'dart:io';
-
-import 'package:auth_handler/auth_handler.dart';
-import 'package:chatbot/component/profile/imagepicker.dart';
+import 'package:chatbot/component/Auth/Forgot.dart';
+import 'package:chatbot/module/database.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class Authfrom extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final isloading;
+class Auth extends StatefulWidget {
+  final Function(bool istrue) iscompleter;
+  Auth(this.iscompleter);
 
-  final void Function(
-      String email,
-      String password,
-      String username,
-      // ignore: non_constant_identifier_names
-      bool islogin,
-      // ignore: non_constant_identifier_names
-      File? ProfImg) submitfm;
-
-  const Authfrom(this.submitfm, this.isloading);
   @override
-  State<Authfrom> createState() => _AuthfromState();
+  State<Auth> createState() => _AuthState();
 }
 
-class _AuthfromState extends State<Authfrom> {
-  final _formkey = GlobalKey<FormState>();
-
-  // ignore: non_constant_identifier_names
-  TextEditingController Email = TextEditingController();
-  // ignore: non_constant_identifier_names
-  TextEditingController Otp = TextEditingController();
-  var _islogin = true;
-  var _issnd = false;
-  var _password = "";
-  // ignore: non_constant_identifier_names
-  var _Username = "";
-  // ignore: non_constant_identifier_names
-  var _Email = "";
-  // prefer_typing_uninitialized_variables
-  // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
-  var _ProfImg;
-
-  var res=false;
-
-  AuthHandler authHandler = AuthHandler();
-
-  void verifyOTP() async {
-    res = await authHandler.verifyOtp(Otp.text);
-    // ignore: avoid_print
-    print(' iscorrect : $res');
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    authHandler.config(
-        senderEmail: "noreply@vishal.dev", senderName: "vishal", otpLength: 5);
-  }
-
-  void _getImg(File image) {
-    _ProfImg = image;
-  }
-
-  void _trysumbmit() {
-    final isvalid = _formkey.currentState?.validate();
-    if (isvalid != null && (res || _islogin)) {
-      _formkey.currentState?.save();
-    }
-    widget.submitfm(
-      _Email,
-      _password,
-      _Username,
-      _islogin,
-      _ProfImg,
-    );
-  }
+class _AuthState extends State<Auth> {
+  TextEditingController firstname = TextEditingController();
+  TextEditingController lastname = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController username = TextEditingController();
+  bool islogin = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: Form(
-        key: _formkey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.bottomCenter,
-                // color: Colors.blue,
-                width: 350,
-                height: 70,
-                child: Text(
-                  _islogin ? "Login" : "Signup",
-                  style: const TextStyle(
-                    fontSize: 28,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Text(
+              "Text",
+              style: TextStyle(color: Colors.white, fontSize: 20.sp),
+            ),
+            Flexible(
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: 4,
                 ),
-              ),
-              SizedBox(
-                height: _islogin ? 100 : 25,
-              ),
-              if (!_islogin) PickImg(_getImg),
-              Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 30),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      "Email",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    // margin: const EdgeInsets.all(8),
-                    width: 350,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      // color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                        20,
-                      ),
-                    ),
-                    child: TextFormField(
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                          // contentPadding: const EdgeInsets.only(
-                          //   bottom: 10,
-                          // ),
-                          // border: OutlineInputBorder(
-                          //   gapPadding: 10,
-                          //   borderRadius: BorderRadius.circular(
-                          //     20,
-                          //   ),
-                          // ),
-                          ),
-                      cursorHeight: 30,
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
-                      controller: Email,
-                      validator: (value) {
-                        if (value == null ||
-                            !value.contains("@") ||
-                            !value.contains(".")) {
-                          return "please enter valid email";
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) {
-                        _Email = newValue as String;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              if (!_islogin)
-                Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 30),
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        "username",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      // margin: const EdgeInsets.all(8),
-                      width: 350,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        // color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                          20,
-                        ),
-                      ),
-                      child: TextFormField(
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                            // contentPadding: const EdgeInsets.only(
-                            //   bottom: 10,
-                            // ),
-                            // border: OutlineInputBorder(
-                            //   gapPadding: 10,
-                            //   borderRadius: BorderRadius.circular(
-                            //     20,
-                            //   ),
-                            // ),
-                            ),
-                        cursorHeight: 30,
-                        style: const TextStyle(
-                          fontSize: 18,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.length < 7) {
-                            return "please enter valid username";
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) {
-                          _Username = newValue as String;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              if (!_islogin)
-                Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 30),
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        "verfy OTP",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          // margin: const EdgeInsets.all(8),
-                          width: 250,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            // color: Colors.white,
-                            borderRadius: BorderRadius.circular(
-                              20,
-                            ),
-                          ),
-                          child: TextFormField(
-                            textAlign: TextAlign.center,
-                            controller: Otp,
-                            decoration: const InputDecoration(
-                                // contentPadding: const EdgeInsets.only(
-                                //   bottom: 10,
-                                // ),
-                                // border: OutlineInputBorder(
-                                //   gapPadding: 10,
-                                //   borderRadius: BorderRadius.circular(
-                                //     20,
-                                //   ),
-                                // ),
-                                ),
-                            cursorHeight: 30,
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                            validator: (value) {
-                              if (value == null || res == false) {
-                                return "Invalid OTP";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) async {
-                              setState(() {});
-                              await Future(() => verifyOTP());
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 18,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _issnd = true;
-                            });
-                            authHandler.sendOtp(Email.text);
-                          },
-                          child: Text(
-                            _issnd ? "Resend" : "send",
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 30),
-                    alignment: Alignment.centerLeft,
-                    child: const Text(
-                      "Password",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    // margin: const EdgeInsets.all(8),
-                    width: 350,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      // color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                        20,
-                      ),
-                    ),
-                    child: TextFormField(
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                          // contentPadding: const EdgeInsets.only(
-                          //   bottom: 10,
-                          // ),
-                          // border: OutlineInputBorder(
-                          //   gapPadding: 10,
-                          //   borderRadius: BorderRadius.circular(
-                          //     20,
-                          //   ),
-                          // ),
-                          ),
-                      cursorHeight: 30,
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.length < 7) {
-                          return "please check password";
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        _password = value;
-                      },
-                      onSaved: (newValue) {
-                        _password = newValue as String;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              // if (!_islogin)
-              //   Column(
-              //     children: [
-              //       Container(
-              //         padding: const EdgeInsets.only(left: 30),
-              //         alignment: Alignment.centerLeft,
-              //         child: const Text(
-              //           "Re-Password",
-              //           textAlign: TextAlign.left,
-              //           style: TextStyle(
-              //             fontSize: 18,
-              //           ),
-              //         ),
-              //       ),
-              //       Container(
-              //         alignment: Alignment.center,
-              //         // margin: const EdgeInsets.all(8),
-              //         width: 350,
-              //         height: 50,
-              //         decoration: BoxDecoration(
-              //           // color: Colors.white,
-              //           borderRadius: BorderRadius.circular(
-              //             20,
-              //           ),
-              //         ),
-              //         child: TextFormField(
-              //           textAlign: TextAlign.center,
-              //           decoration: InputDecoration(
-              //             // contentPadding: const EdgeInsets.only(
-              //             //   bottom: 10,
-              //             // ),
-              //             fillColor: Colors.white,
-              //             // border: OutlineInputBorder(
-              //             //   gapPadding: 10,
-              //             //   borderRadius: BorderRadius.circular(
-              //             //     20,
-              //             //   ),
-              //             // ),
-              //           ),
-              //           cursorHeight: 30,
-              //           style: const TextStyle(
-              //             fontSize: 18,
-              //           ),
-              //           validator: (value) {
-              //             if (value == null || value ==_password) {
-              //               return "please enter valid username";
-              //             }
-              //             print(_password);
-              //             return null;
-              //           },
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              SizedBox(
-                height: _islogin ? 320 : 15,
-              ),
-              Container(
-                width: 200,
                 decoration: BoxDecoration(
-                    color: Colors.blueGrey,
-                    borderRadius: BorderRadius.circular(25)),
-                child: TextButton(
-                  onPressed: _trysumbmit,
-                  child: Text(
-                    _islogin ? "Login" : "Signup",
-                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  "Hub",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.sp,
                   ),
                 ),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _islogin ? "I don't have account : " : "I have account : ",
-                    style: const TextStyle(
-                      fontSize: 17,
-                    ),
+            ),
+          ],
+        ),
+        // titleSpacing: double.infinity,
+
+        actions: [
+          Flexible(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  islogin = !islogin;
+                });
+              },
+              child: Container(
+                // height: 27,
+                padding: EdgeInsets.all(4),
+                margin: EdgeInsets.only(
+                  right: 21,
+                  bottom: 11,
+                  top: 12,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.white, width: 1),
+                ),
+                child: Text(
+                  islogin ? "Sign Up" : "Login",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.sp,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _islogin = !_islogin;
-                      });
-                    },
-                    child: Text(
-                      _islogin ? "signup" : "Login",
-                      style: const TextStyle(
-                        fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        // flexibleSpace: ,
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedContainer(
+            margin: EdgeInsets.only(
+              top: islogin ? 88 : 44,
+              left: islogin ? 112 : 32,
+            ),
+            duration: Duration(milliseconds: 350),
+            child: Text(
+              islogin ? "Login" : "Register",
+              style: TextStyle(color: Colors.white, fontSize: 28.sp),
+            ),
+          ),
+          AnimatedContainer(
+            margin: EdgeInsets.only(
+              // top: 44,
+              left: islogin ? 112 : 32,
+            ),
+            duration: Duration(milliseconds: 350),
+            child: Text(
+              islogin ? "Login to see your chats" : "Create a new account",
+              style: TextStyle(color: Colors.white, fontSize: 13.sp),
+            ),
+          ),
+          Expanded(
+            child: AnimatedContainer(
+              margin: EdgeInsets.only(
+                top: islogin ? 112 : 44,
+                left: 0,
+                right: 0,
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 34,
+                // vertical: 34,
+              ),
+              duration: Duration(
+                milliseconds: 350,
+              ),
+              alignment: Alignment.center,
+              // height: 520,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(41.r),
+                  topRight: Radius.circular(41.r),
+                ),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (!islogin) Name(firstname, lastname),
+                    teztcontainer('Email', email),
+                    if (!islogin) teztcontainer('username', username),
+                    teztcontainer('password', password),
+                    if (islogin)
+                      Container(
+                        child: Row(
+                          children: [
+                            Text(
+                              "Forget Password?",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => forgot(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Click Here",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    GestureDetector(
+                      onTap: () {
+                        if(!islogin){
+                          setState(() {
+                            widget.iscompleter(false);
+                          });
+                        }
+                        final _auth = DatabaseAuth();
+                        _auth.FireAuth(firstname.text, lastname.text,
+                            email.text, password.text, username.text, islogin);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          left: 38,
+                          top: 27,
+                          right: 45,
+                        ),
+                        padding: EdgeInsets.only(
+                          top: 11,
+                          bottom: 11,
+                        ),
+                        // color: Colors.amberAccent,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.r),
+                            color: Colors.black),
+                        alignment: Alignment.center,
+                        child: Text(
+                          islogin ? "Login" : "Sign Up",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
+
+class Name extends StatefulWidget {
+  TextEditingController FirstName;
+  TextEditingController LastName;
+  Name(this.FirstName, this.LastName);
+
+  @override
+  State<Name> createState() => _NameState();
+}
+
+class _NameState extends State<Name> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // SizedBox(
+        //   height: 55.h,
+        // ),
+        Row(
+          children: [
+            // SizedBox(
+            //   width: 32.w,
+            // ),
+            Text(
+              "First Name",
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(
+              width: 77.w,
+            ),
+            Text(
+              "Last Name",
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+        // SizedBox(
+        //   height: 9.h,
+        // ),
+        Row(
+          children: [
+            Flexible(
+              child: Container(
+                // width: 130,
+
+                child: TextField(
+                  decoration: InputDecoration(),
+                  controller: widget.FirstName,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            Flexible(
+              child: Container(
+                child: TextField(
+                  controller: widget.LastName,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class teztcontainer extends StatefulWidget {
+  String Text;
+  TextEditingController input;
+  teztcontainer(this.Text, this.input);
+
+  @override
+  State<teztcontainer> createState() => _teztcontainerState();
+}
+
+class _teztcontainerState extends State<teztcontainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          // color: Colors.amber,
+          margin: EdgeInsets.only(
+            top: 20,
+            // left: 32,
+          ),
+          child: Text(
+            widget.Text,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(
+            top: 9,
+            // left: 32,
+          ),
+          child: TextFormField(
+            controller: widget.input,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            validator: (value) {
+              if (value != null &&
+                  EmailValidator.validate(value) &&
+                  widget.Text == 'Email') {
+                return "please enter valid Mail ID";
+              }
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+

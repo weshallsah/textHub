@@ -1,16 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:chatbot/Notification/notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart';
-import 'package:intl/intl.dart';
 
 class Snd extends StatefulWidget {
   final RoomId;
@@ -24,8 +18,12 @@ class Snd extends StatefulWidget {
 class _SndState extends State<Snd> {
   final _controller = new TextEditingController();
   String? NotiID;
+  bool _iscursor = false;
   late var entermassage = '';
   void sndmassage() async {
+    setState(() {
+      entermassage = _controller.text;
+    });
     final roomID = widget.RoomId;
     final auth = await FirebaseAuth.instance.currentUser;
     final user = await FirebaseFirestore.instance
@@ -36,6 +34,7 @@ class _SndState extends State<Snd> {
     // print(roomID);
     FirebaseFirestore.instance.collection('Chat').doc(roomID).update({
       'Ismess': true,
+      'Recent': DateTime.now(),
     });
     await FirebaseFirestore.instance
         .collection('user')
@@ -66,12 +65,12 @@ class _SndState extends State<Snd> {
     FirebaseFirestore.instance
         .collection('Chat')
         .doc(roomID)
-        .collection('Massage')
+        .collection('Message')
         .add({
       'Text': entermassage,
       'Createdat': Timestamp.now(),
-      'isvanishTime':DateTime.now().hour,
-      'isvanishDay':DateTime.now().day,
+      'isvanishTime': DateTime.now().hour,
+      'isvanishDay': DateTime.now().day,
       'UserId': auth?.uid,
       'Username': user['Username'],
       'userProf': user['profile_img_url'],
@@ -97,29 +96,74 @@ class _SndState extends State<Snd> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: '...',
+          Flexible(
+            // fit: ,
+            flex: 3,
+            child: Container(
+              margin: EdgeInsets.only(
+                bottom: 12,
               ),
-              onChanged: (value) {
-                setState(() {
-                  entermassage = value.trim();
-                });
-              },
-              controller: _controller,
+              padding: EdgeInsets.all(12),
+              height: 56,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.white,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: TextField(
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontFamily: "Poppins",
+                  color: Colors.white,
+                ),
+                controller: _controller,
+                showCursor: _iscursor,
+                onChanged: (value) {
+                  setState(() {
+                    if (_controller.text == "") {
+                      _iscursor = false;
+                    } else {
+                      _iscursor = true;
+                    }
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: " Type Something",
+                  hintStyle: TextStyle(
+                    fontSize: 15.sp,
+                    color: Color.fromARGB(211, 166, 166, 166),
+                  ),
+                  border: InputBorder.none,
+                ),
+              ),
             ),
           ),
-          IconButton(
-              onPressed: () {
-                // print(widget.RoomId);
-                entermassage.trim().isEmpty ? null : sndmassage();
-              },
-              icon: const Icon(Icons.send))
+          Flexible(
+            flex: 1,
+            child: Container(
+              height: 53,
+              margin: EdgeInsets.only(
+                bottom: 12,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  sndmassage();
+                },
+                icon: Icon(
+                  Icons.send_rounded,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -1,12 +1,10 @@
 import 'package:chatbot/component/chats/ChatRoom/chatRoom.dart';
-import 'package:chatbot/screen/ChatBox.dart';
-import 'package:chatbot/screen/authscreen.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 final ChatId = const Uuid();
@@ -30,7 +28,37 @@ class _searchPageState extends State<searchPage> {
         .where('FrndConver.${uid}', isEqualTo: true)
         .where('FrndConver.${myuid}')
         .get();
-    if (Room.docs.length > 0) {
+    if (myuid == uid) {
+      var keycnt;
+
+      Room.docs[0].data().forEach(
+        (key, value) {
+          if (key == uid) {
+            keycnt++;
+          }
+        },
+      );
+      if (keycnt == 2) {
+        ChatRoomid = Room.docs[0].data()['ChatRoomId'];
+      } else {
+        ChatRoomid = ChatId.v1();
+        await FirebaseFirestore.instance
+            .collection('Chat')
+            .doc(ChatRoomid)
+            .set({
+          'Username': username,
+          'ProfImg': Pic,
+          'Recent': DateTime.now(),
+          'ChatRoomId': ChatRoomid,
+          'Ismess': false,
+          'isArchive': false,
+          'FrndConver': {
+            uid: true,
+            myuid: true,
+          },
+        });
+      }
+    } else if (Room.docs.length > 0) {
       ChatRoomid = await Room.docs[0].data()['ChatRoomId'];
     } else {
       ChatRoomid = ChatId.v1();
@@ -38,60 +66,150 @@ class _searchPageState extends State<searchPage> {
         'Username': username,
         'ProfImg': Pic,
         'ChatRoomId': ChatRoomid,
+        'Recent': DateTime.now(),
         'Ismess': false,
+        'isArchive': false,
         'FrndConver': {
           uid: true,
           myuid: true,
         },
       });
-      print("get in chatid");
-      print(ChatRoomid);
+      // print("get in chatid");
+      // print(ChatRoomid);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back)),
-          centerTitle: true,
-          title: const Text(
-            "Search",
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 24,
-            ),
+      appBar: AppBar(
+        toolbarHeight: 71.h,
+        leadingWidth: 0.w,
+        leading: Container(),
+        elevation: 0,
+        // leading: Icon(Icons.dot),
+        title: Container(
+          margin: EdgeInsets.only(
+            left: 24.w,
+            top: 40.h,
+          ),
+          width: 313.w,
+          height: 70.h,
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(0),
+                // margin: EdgeInsets.only(
+                //   top: 40.h,
+                //   left: 34.w,
+                // ),
+                child: Text(
+                  "Text",
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.poppins().toString(),
+                    fontSize: 20.sp,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  left: 4.w,
+                  // top: 40.h,
+                ),
+                height: 30.h,
+                width: 43.w,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    // color: _dragup ? Colors.black : Colors.white,
+                    borderRadius: BorderRadius.circular(4.r)),
+                alignment: Alignment.center,
+                child: Text(
+                  "Hub",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: GoogleFonts.poppins().toString(),
+                    fontSize: 20.sp,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 350),
+                  margin: EdgeInsets.only(left: 107.w),
+                  height: 31.h,
+                  width: 99.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.r),
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 1,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Archive",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.poppins().toString(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        body: Column(
+      ),
+      body: GestureDetector(
+        onHorizontalDragUpdate: (details) {
+          // Note: Sensitivity is integer used when you don't want to mess up vertical drag
+          int sensitivity = 8;
+          if (details.delta.dx > sensitivity) {
+            // Right Swipe
+            print("rigth swipe");
+            Navigator.pop(context);
+          }
+        },
+        child: Column(
           children: [
             Container(
-              // color: Colors.amber,
-              // height: 60,
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.only(
-                        top: 30, bottom: 15, left: 10, right: 10),
-                    // height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      // color: Colors.amber,
+                    // padding: const EdgeInsets.all(5),
+                    margin: EdgeInsets.only(
+                      top: 30.h,
+                      left: 29.w,
+                      right: 28.w,
                     ),
+                    alignment: Alignment.center,
+                    height: 48.h,
+                    width: 318.w,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 1,
+                          style: BorderStyle.solid,
+                        )
+                        // color: Colors.amber,
+                        ),
                     child: TextField(
                       controller: Searchuser,
                       textAlign: TextAlign.center,
-                      cursorHeight: 30,
-                      cursorRadius: const Radius.circular(20),
                       decoration: InputDecoration(
-                        hintText: "search email",
+                        hintText: "Search",
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.sp,
+                          fontFamily: GoogleFonts.poppins().toString(),
+                          fontWeight: FontWeight.w700,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                       onChanged: (value) {
@@ -99,73 +217,87 @@ class _searchPageState extends State<searchPage> {
                       },
                     ),
                   ),
-                  // GestureDetector(
-                  //   child: Container(
-                  //     alignment: Alignment.center,
-                  //     margin: const EdgeInsets.only(left: 100, right: 100),
-                  //     height: 45,
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.blueGrey,
-                  //       borderRadius: BorderRadius.circular(20),
-                  //     ),
-                  //     child: const Text(
-                  //       "search",
-                  //       style: TextStyle(fontSize: 28, color: Colors.white),
-                  //     ),
-                  //   ),
-                  //   onTap: () {
-                  //     setState(() {});
-                  //     // print(Searchuser.text);
-                  //   },
-                  // )
                 ],
               ),
             ),
-            const SizedBox(
-              height: 15,
-            ),
+            // SizedBox(height: 19.h),
+            // if(Searchuser.text==)
             Expanded(
               child: Container(
+                padding: EdgeInsets.all(0),
                 child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('user')
-                        .where("Email", isEqualTo: Searchuser.text)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.active) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        if (snapshot.hasData) {
-                          final searchuser = snapshot.data?.docs;
-                          if (searchuser != null && searchuser.length > 0) {
-                            print(searchuser);
-                            return ListView.builder(
-                              itemCount: searchuser.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    // backgroundColor: Colors.amber,
-                                    backgroundImage: searchuser[index]
-                                                ['profile_img_url'] !=
-                                            null
-                                        ? NetworkImage(searchuser[index]
-                                            ['profile_img_url'])
-                                        : null,
+                  stream: FirebaseFirestore.instance
+                      .collection('user')
+                      .where("Username", isEqualTo: Searchuser.text)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        final searchuser = snapshot.data?.docs;
+                        if (searchuser != null && searchuser.length > 0) {
+                          print(searchuser);
+                          return ListView.builder(
+                            itemCount: searchuser.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(left: 13.w, top: 22.h),
+                                child: ListTile(
+                                  leading: Container(
+                                    child: CircleAvatar(
+                                      radius: 30.r,
+                                      foregroundImage: NetworkImage(
+                                          searchuser[index]['Avtar_URL']),
+                                    ),
                                   ),
-                                  title: Text(searchuser[index]['Username']),
-                                  subtitle: Text(searchuser[index]['Email']),
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 33.h,
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          searchuser[index]['Username'],
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22.sp,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: GoogleFonts.poppins()
+                                                .toString(),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        height: 23.h,
+                                        child: Text(
+                                          "Recent massage",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: GoogleFonts.poppins()
+                                                .toString(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   onTap: () async {
                                     await Future(() => getchatRoom(
                                         searchuser[index]['uid'],
                                         searchuser[index]['Username'],
-                                        searchuser[index]['profile_img_url'],
+                                        searchuser[index]['Avtar_URL'],
                                         searchuser[index]['Noti_Id']));
-                                    print("checking before chatroom");
-                                    print(ChatRoomid);
+                                    // print("checking before chatroom");
+                                    // print(ChatRoomid);
                                     Navigator.pop(context);
                                     // ignore: use_build_context_synchronously
 
@@ -183,40 +315,33 @@ class _searchPageState extends State<searchPage> {
                                       ),
                                     );
                                   },
-                                );
-                              },
-                            );
-                          } else {
-                            // return const Text("....");
-                            return Center(
-                              child: Text(
-                                "....",
-                                style: TextStyle(fontSize: 28),
-                              ),
-                            );
-                          }
+                                ),
+                              );
+                            },
+                          );
                         } else {
-                          return Center(
-                              child: Text(
-                                "no user found",
-                                style: TextStyle(fontSize: 28),
-                              ),
-                            );
-                          // return const Text();
+                          Container();
                         }
                       } else {
-                        return Center(
-                              child: Text(
-                                "no user found",
-                                style: TextStyle(fontSize: 28),
-                              ),
-                            );
-                        // return const Text();
+                        return Container();
                       }
-                    }),
+                    } else {
+                      return Center(
+                        child: Text(
+                          "no user found",
+                          style: TextStyle(fontSize: 28),
+                        ),
+                      );
+                      // return const Text();
+                    }
+                    return Container();
+                  },
+                ),
               ),
-            )
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

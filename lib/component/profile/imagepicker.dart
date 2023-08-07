@@ -14,6 +14,7 @@ class PickImg extends StatefulWidget {
 
 class _PickImgState extends State<PickImg> {
   // bool ison=true;
+  String URL = "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d";
   File? _img;
   void _pickImg(String? _Source) async {
     print("clicked");
@@ -46,7 +47,8 @@ class _PickImgState extends State<PickImg> {
         children: [
           CircleAvatar(
             radius: 80,
-            backgroundImage: _img != null ? FileImage(_img!) : null,
+            backgroundImage: NetworkImage(URL),
+            foregroundImage: _img != null ? FileImage(_img!) : null,
           ),
           // if(ison)
           TextButton(
