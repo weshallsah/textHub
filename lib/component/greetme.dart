@@ -1,10 +1,11 @@
+import 'package:chatbot/component/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class greetme extends StatefulWidget {
-  final Avtar,username;
-  greetme(this.Avtar,this.username);
+  final Avtar, username;
+  greetme(this.Avtar, this.username);
 
   @override
   State<greetme> createState() => _greetmeState();
@@ -14,7 +15,7 @@ class _greetmeState extends State<greetme> {
   String Greet = "";
   final url =
       'https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2FGroupprofile.png?alt=media&token=cda8d654-2c10-43c3-afd0-a682e0c48de9';
-  String _username = "vishalsah";
+  // String _username = "vishalsah";
   // String _fontfamily = "Poppins";
 
   void greet() {
@@ -65,7 +66,7 @@ class _greetmeState extends State<greetme> {
                     ),
                   ),
                   Text(
-                    widget.username + "!",
+                    widget.username + " !",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28.sp,
@@ -73,9 +74,19 @@ class _greetmeState extends State<greetme> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Profile(
+                            widget.Avtar,
+                            widget.username,
+                          ),
+                        ),
+                      );
+                    },
                     child: Text(
-                      "Edit",
+                      "Profile",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 13.sp,

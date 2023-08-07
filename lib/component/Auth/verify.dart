@@ -15,13 +15,25 @@ class verify extends StatefulWidget {
 
 class _verifyState extends State<verify> {
   final auth = FirebaseAuth.instance.currentUser;
+  bool ischeck = false;
   void sendlink() async {
     auth?.sendEmailVerification();
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    auth?.reload().then((value) {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    
-    auth?.reload();
+    auth?.reload().then((value) {
+      setState(() {});
+    });
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 71.h,
@@ -36,10 +48,6 @@ class _verifyState extends State<verify> {
             children: [
               Container(
                 padding: EdgeInsets.all(0),
-                // margin: EdgeInsets.only(
-                //   top: 40.h,
-                //   left: 34.w,
-                // ),
                 child: Text(
                   "Text",
                   style: Theme.of(context).textTheme.titleMedium,
@@ -109,28 +117,46 @@ class _verifyState extends State<verify> {
                 ),
                 color: Colors.white,
               ),
-              child: GestureDetector(
-                onTap: () {
-                  sendlink();
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: 115,
-                    horizontal: 35,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22.r),
-                    color: Colors.black,
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Email verify",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.white,
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (!ischeck)
+                      Text(
+                        "Get Mail verification",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                        ),
                       ),
+                    if (ischeck)
+                      Text(
+                        "Verfication Mail is sended",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                        ),
+                      ),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          ischeck = true;
+                        });
+                      },
+                      style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.black),
+                        maximumSize: MaterialStatePropertyAll(
+                          Size(300, 97),
+                        ),
+                        minimumSize: MaterialStatePropertyAll(
+                          Size(160, 55),
+                        ),
+                      ),
+                      child: Text(ischeck ? "Resend Mail" : "Send Mail"),
+                    ),
+                  ],
                 ),
               ),
             ),

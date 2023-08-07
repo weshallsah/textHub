@@ -54,6 +54,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  TextEditingController URL = TextEditingController(
+      text:
+          "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d");
   bool iscomplete = true;
   void check(bool istrue) {
     setState(() {
@@ -82,7 +85,7 @@ class _MyAppState extends State<MyApp> {
                   if (iscomplete) {
                     return Home();
                   }
-                  return chooseAvtar(check);
+                  return chooseAvtar(check, false, URL);
                 }
                 return verify();
               }

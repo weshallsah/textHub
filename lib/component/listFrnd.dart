@@ -27,7 +27,7 @@ class _ListFrndState extends State<ListFrnd> {
           .where(widget.docs.toString(), isEqualTo: true)
           .where("Ismess", isEqualTo: true)
           .where("isArchive", isEqualTo: widget.isarchiv)
-          .orderBy("Recent",descending: true)
+          // .orderBy('Recent', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -35,7 +35,6 @@ class _ListFrndState extends State<ListFrnd> {
           if (FrndList != null && FrndList.length > 0) {
             return Flexible(
               child: ListView.builder(
-                reverse: false,
                 padding: EdgeInsets.all(0),
                 itemCount: FrndList.length,
                 itemBuilder: (context, index) {

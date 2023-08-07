@@ -73,7 +73,7 @@ class _SndState extends State<Snd> {
       'isvanishDay': DateTime.now().day,
       'UserId': auth?.uid,
       'Username': user['Username'],
-      'userProf': user['profile_img_url'],
+      'userProf': user['Avtar_URL'],
     }).then((value) {
       var res;
       try {
@@ -118,7 +118,7 @@ class _SndState extends State<Snd> {
               ),
               alignment: Alignment.center,
               child: TextField(
-                textAlign: TextAlign.center,
+                // textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontFamily: "Poppins",

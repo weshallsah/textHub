@@ -48,7 +48,7 @@ class _ArchiveState extends State<Archive> {
       ),
       body: GestureDetector(
         onHorizontalDragUpdate: (details) {
-          if(details.delta.dx>8){
+          if (details.delta.dx > 8) {
             // print("rigth");
             Navigator.pop(context);
           }
@@ -56,56 +56,60 @@ class _ArchiveState extends State<Archive> {
           //   print("left");
           // }
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AnimatedContainer(
-              margin: EdgeInsets.only(
-                top: 31,
-                left: 39,
-              ),
-              duration: Duration(
-                milliseconds: 350,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      // color: Colors.amber,
-                      // height: 27,
-                      child: Icon(
-                        Icons.archive_outlined,
-                        color: Colors.white,
+        child: AnimatedContainer(
+          duration: Duration(
+            milliseconds: 350,
+          ),
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AnimatedContainer(
+                margin: EdgeInsets.only(
+                  top: 31,
+                  left: 39,
+                ),
+                duration: Duration(
+                  milliseconds: 350,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        child: Icon(
+                          Icons.archive_outlined,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: SizedBox(
-                      width: 14,
-                    ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: Text(
-                      "Archive",
-                      style: TextStyle(
-                        color: Colors.white,
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox(
+                        width: 14,
                       ),
                     ),
-                  ),
-                ],
+                    Flexible(
+                      flex: 2,
+                      child: Text(
+                        "Archive",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ListFrnd(
-              docs: widget.Docs,
-              myuid: widget.Myuid,
-              isarchiv: true,
-            ),
-          ],
+              ListFrnd(
+                docs: widget.Docs,
+                myuid: widget.Myuid,
+                isarchiv: true,
+              ),
+            ],
+          ),
         ),
       ),
     );

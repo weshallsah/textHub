@@ -94,19 +94,15 @@ class _HomeState extends State<Home> {
           Flexible(
             child: GestureDetector(
               onTap: () {
-                if (isup) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Archive(
-                        Docs: docs,
-                        Myuid: myuid,
-                      ),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Archive(
+                      Docs: docs,
+                      Myuid: myuid,
                     ),
-                  );
-                } else {
-                  DatabaseAuth().logout();
-                }
+                  ),
+                );
               },
               child: Container(
                 // height: 27,
@@ -121,7 +117,7 @@ class _HomeState extends State<Home> {
                   border: Border.all(color: Colors.white, width: 1),
                 ),
                 child: Text(
-                  isup ? "Archived" : "Logout",
+                  "Archived",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.sp,
@@ -157,7 +153,7 @@ class _HomeState extends State<Home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!isup) greetme(profilimage,userName),
+            if (!isup) greetme(profilimage, userName),
             chatBox(drag_: isup, docs: docs, Myuid: myuid),
           ],
         ),

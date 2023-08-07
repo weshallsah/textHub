@@ -1,3 +1,4 @@
+import 'package:chatbot/module/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,15 +6,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class chooseAvtar extends StatefulWidget {
   final Function(bool istrue) ischeck;
-  chooseAvtar(this.ischeck);
+  final isprofile;
+  TextEditingController URL;
+  chooseAvtar(this.ischeck,this.isprofile,this.URL);
 
   @override
   State<chooseAvtar> createState() => _chooseAvtarState();
 }
 
 class _chooseAvtarState extends State<chooseAvtar> {
-  String url =
-      "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d";
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +57,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
               left: 22,
             ),
             child: Text(
-              "complete profile",
+              widget.isprofile?  "Edit Avtar":"complete profile",
               style: TextStyle(
                 fontSize: 28.sp,
                 color: Colors.white,
@@ -86,7 +88,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                          url,
+                          widget.URL.text,
                         ),
                       ),
                     ),
@@ -141,10 +143,13 @@ class _chooseAvtarState extends State<chooseAvtar> {
             // color: Colors.amber,
             child: TextButton(
               onPressed: () {
+                databasestore().uploadAvtar(widget.URL.text);
                 setState(() {
                   widget.ischeck(true);
                 });
-                // Navigator.pop(context);
+                if(widget.isprofile==true){
+                  Navigator.pop(context);
+                }
               },
               child: Text(
                 "next",
@@ -187,7 +192,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
                             return GestureDetector(
                               onTap: () async {
                                 setState(() {
-                                  url = Avtar[index];
+                                  widget.URL.text = Avtar[index];
                                 });
                                 await FirebaseFirestore.instance
                                     .collection('user')

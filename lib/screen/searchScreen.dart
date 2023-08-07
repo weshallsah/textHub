@@ -291,11 +291,13 @@ class _searchPageState extends State<searchPage> {
                                     ],
                                   ),
                                   onTap: () async {
-                                    await Future(() => getchatRoom(
-                                        searchuser[index]['uid'],
-                                        searchuser[index]['Username'],
-                                        searchuser[index]['Avtar_URL'],
-                                        searchuser[index]['Noti_Id']));
+                                    await Future(
+                                      () => getchatRoom(
+                                          searchuser[index]['uid'],
+                                          searchuser[index]['Username'],
+                                          searchuser[index]['Avtar_URL'],
+                                          searchuser[index]['Noti_Id']),
+                                    );
                                     // print("checking before chatroom");
                                     // print(ChatRoomid);
                                     Navigator.pop(context);
@@ -310,7 +312,7 @@ class _searchPageState extends State<searchPage> {
                                           username: searchuser[index]
                                               ['Username'],
                                           userPic: searchuser[index]
-                                              ['profile_img_url'],
+                                              ['Avtar_URL'],
                                         ),
                                       ),
                                     );

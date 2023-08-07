@@ -185,7 +185,7 @@ class _AuthState extends State<Auth> {
                       ),
                     GestureDetector(
                       onTap: () {
-                        if(!islogin){
+                        if (!islogin) {
                           setState(() {
                             widget.iscompleter(false);
                           });
@@ -257,6 +257,7 @@ class _NameState extends State<Name> {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w700,
+                color: Colors.black,
               ),
             ),
             SizedBox(
@@ -265,9 +266,9 @@ class _NameState extends State<Name> {
             Text(
               "Last Name",
               style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
-              ),
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black),
             ),
           ],
         ),
@@ -362,6 +363,3 @@ class _teztcontainerState extends State<teztcontainer> {
     );
   }
 }
-
-
-

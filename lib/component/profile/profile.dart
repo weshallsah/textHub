@@ -1,376 +1,364 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:chatbot/component/Auth/auth.dart';
+import 'package:chatbot/component/Auth/uploadAvtar.dart';
+import 'package:chatbot/module/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class profilePage extends StatefulWidget {
-  // final void Function(bool isEdit) _isedited;
-  profilePage();
+class Profile extends StatefulWidget {
+  final Avtar, username;
+  Profile(this.Avtar, this.username);
 
   @override
-  State<profilePage> createState() => _profilePageState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _profilePageState extends State<profilePage> {
-  final url = '';
-  File? ProfImage;
-  TextEditingController Username = TextEditingController();
-  TextEditingController userEmail = TextEditingController();
-  String? userName = '';
-  String? Useremail = '';
-  String? profilimage = '';
-
-  Future getData() async {
-    await FirebaseFirestore.instance
-        .collection('user')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .get()
-        .then(
-      (snapshot) async {
-        if (snapshot.exists) {
-          setState(() {
-            userName = snapshot.data()!['Username'];
-            Username.text = snapshot.data()!['Username'];
-            Useremail = snapshot.data()!['Email'];
-            userEmail.text = snapshot.data()!['Email'];
-            profilimage = snapshot.data()!['profile_img_url'];
-          });
-        }
-      },
-    );
-  }
-
+class _ProfileState extends State<Profile> {
+  TextEditingController firstname = TextEditingController();
+  TextEditingController lastname = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController username = TextEditingController();
+  TextEditingController about = TextEditingController();
+  TextEditingController URL = TextEditingController();
+  bool iseditmode = false;
+  bool editprofile = false;
   @override
   void initState() {
     // TODO: implement initState
-    getData();
     super.initState();
-  }
-
-  void imagepck(String? _Source) async {
-    var newUrl="";
-    if (_Source == "gallery") {
-      final pickedimgfile = await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 20);
-      setState(() {
-        ProfImage = File(pickedimgfile!.path);
-      });
-    } else {
-      final pickedimgfile =
-          await ImagePicker().pickImage(source: ImageSource.camera,imageQuality: 20);
-      setState(() {
-        ProfImage = File(pickedimgfile!.path);
-      });
-    }
-    try {
-      // final ref;
-      if (profilimage != "") {
-        final ref = FirebaseStorage.instance.refFromURL(profilimage!);
-        UploadTask uploadTask = ref.putFile(ProfImage!);
-        await uploadTask.whenComplete(() async {
-          newUrl = await ref.getDownloadURL();
-          print("complete");
-        });
-      } else {
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('Prof_Img')
-            .child('${FirebaseAuth.instance.currentUser?.uid}.jpg');
-        UploadTask uploadTask = ref.putFile(ProfImage!);
-        await uploadTask.whenComplete(() async {
-          newUrl = await ref.getDownloadURL();
-          print("complete");
-        });
-      }
-
-      await FirebaseFirestore.instance
-          .collection('user')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .update({'profile_img_url': newUrl});
-    } on PlatformException catch (err) {
-      String? massage = "something went wrong";
-      if (err.message != null) {
-        massage = err.message;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(massage as String),
-        ),
-      );
-    } catch (err) {
-      print(err);
-    }
-  }
-
-  void editProfile() async {
-    if (Useremail != userEmail.text || userName != Username.text) {
-      await FirebaseFirestore.instance
-          .collection('user')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .update({
-        'Username': Username.text,
-        'Email': userEmail.text,
-      }).whenComplete(() async {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Profile was update"),
-          ),
-        );
-      });
-      // widget._isedited(true);
-    }
+    databasestore().fetchdata(firstname, lastname, email, username, about);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 55,
-              ),
-              Container(
-                child: CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Colors.blueGrey,
-                  child: CircleAvatar(
-                    radius: 78,
-                    foregroundImage: ProfImage!=null?FileImage(ProfImage!):null,
-                    backgroundImage: profilimage != null
-                        ? NetworkImage(profilimage!)
-                        : NetworkImage(url),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            Text(
+              "Text",
+              style: TextStyle(color: Colors.white, fontSize: 20.sp),
+            ),
+            Flexible(
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  "Hub",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.sp,
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
+            ),
+          ],
+        ),
+        elevation: 0,
+      ),
+      body: Container(
+        child: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            if (details.delta.dx > 8) {
+              // print("rigth");
+              Navigator.pop(context);
+            }
+            // else if(details.delta.dx<-8){
+            //   print("left");
+            // }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 30,
               ),
-              Container(
-                height: 40,
+              Stack(
                 alignment: Alignment.center,
-                // color: Colors.amber,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.image,
-                      size: 28,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        showGeneralDialog(
-                          barrierLabel: "Label",
-                          barrierDismissible: true,
-                          barrierColor: Colors.black.withOpacity(0.5),
-                          transitionDuration: Duration(milliseconds: 700),
-                          context: context,
-                          pageBuilder: (context, anim1, anim2) {
-                            return Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 100,
-                                margin: const EdgeInsets.only(
-                                  bottom: 10,
-                                  left: 12,
-                                  right: 12,
-                                ),
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(197, 255, 255, 255),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                    bottomLeft: Radius.circular(5),
-                                    bottomRight: Radius.circular(5),
-                                  ),
-                                ),
-                                child: Row(
-                                  // crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 20),
-                                      height: 80,
-                                      width: 70,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          imagepck("gallery");
-                                        },
-                                        child: Column(
-                                          children: const [
-                                            Icon(
-                                              Icons.filter,
-                                              size: 50,
-                                            ),
-                                            Text(
-                                              "gallery",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 20),
-                                      height: 80,
-                                      width: 70,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          imagepck("Camera");
-                                        },
-                                        child: Column(
-                                          children: const [
-                                            Icon(
-                                              Icons.camera,
-                                              size: 50,
-                                            ),
-                                            Text(
-                                              "Camera",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          transitionBuilder: (context, anim1, anim2, child) {
-                            return SlideTransition(
-                              position:
-                                  Tween(begin: Offset(0, 1), end: Offset(0, 0))
-                                      .animate(anim1),
-                              child: child,
-                            );
-                          },
-                        );
-                      },
-                      child: const Text(
-                        "Edit image",
-                        style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 20,
+                children: [
+                  Flexible(
+                    child: Container(
+                      height: 96,
+                      decoration: BoxDecoration(
+                        // color: Colors.white,
+                        image: DecorationImage(
+                          image: NetworkImage(widget.Avtar),
                         ),
                       ),
-                    )
-                  ],
+                    ),
+                  ),
+                  if (editprofile)
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 62,
+                        left: 62,
+                      ),
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.blue),
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            URL.text = widget.Avtar;
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  chooseAvtar((bool value) {}, true, URL),
+                            ),
+                          );
+                        },
+                        style: ButtonStyle(),
+                        icon: Icon(Icons.edit, color: Colors.white, size: 20),
+                      ),
+                    ),
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  widget.username,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22.sp,
+                  ),
                 ),
               ),
               SizedBox(
-                height: 15,
+                height: 2,
               ),
               Container(
-                width: double.infinity,
-                // color: Colors.amber,
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(15),
-                      child: TextFormField(
-                        controller: Username,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: "username",
-                          // contentPadding: const EdgeInsets.only(
-                          //   bottom: 10,
-                          // ),
-                          border: OutlineInputBorder(
-                            gapPadding: 10,
-                            borderRadius: BorderRadius.circular(
-                              20,
-                            ),
-                          ),
-                        ),
-                        cursorHeight: 30,
-                        style: const TextStyle(
-                          fontSize: 20,
-                        ),
-                        validator: (value) {
-                          if (value == null ||
-                              !value.contains("@") ||
-                              !value.contains(".")) {
-                            return "please enter valid email";
-                          }
-                          return null;
-                        },
-                        // onSaved: (newValue) {
-                        //   _Email = newValue as String;
-                        // },
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(15),
-                      child: TextFormField(
-                        controller: userEmail,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: "Email",
-                          // contentPadding: const EdgeInsets.only(
-                          //   bottom: 10,
-                          // ),
-                          border: OutlineInputBorder(
-                            gapPadding: 10,
-                            borderRadius: BorderRadius.circular(
-                              20,
-                            ),
-                          ),
-                        ),
-                        cursorHeight: 30,
-                        style: const TextStyle(
-                          fontSize: 20,
-                        ),
-                        validator: (value) {
-                          if (value == null ||
-                              !value.contains("@") ||
-                              !value.contains(".")) {
-                            return "please enter valid email";
-                          }
-                          return null;
-                        },
-                        // onSaved: (newValue) {
-                        //   _Email = newValue as String;
-                        // },
-                      ),
-                    ),
-                    const SizedBox(height: 80),
-                    Container(
-                      width: 250,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: TextButton(
-                        onPressed: () {
-                          editProfile();
-                        },
-                        child: const Text(
-                          "save",
-                          style: TextStyle(color: Colors.white, fontSize: 24),
-                        ),
-                      ),
-                    ),
-                  ],
+                alignment: Alignment.center,
+                child: Text(
+                  about.text,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13.sp,
+                  ),
                 ),
-              )
+              ),
+              SizedBox(
+                height: 36,
+              ),
+              if (!iseditmode)
+                Expanded(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 350),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(31),
+                        topRight: Radius.circular(31),
+                      ),
+                    ),
+                    padding: EdgeInsets.only(
+                      left: 36,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 25),
+                        Text(
+                          "Setting.",
+                          style: TextStyle(
+                            // color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 28,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              iseditmode = true;
+                              editprofile = true;
+                            });
+                          },
+                          child: settingContainer("Edit Profile", false),
+                        ),
+                        settingContainer("Dark Mode", false),
+                        GestureDetector(
+                          child: settingContainer("Feedback", false),
+                        ),
+                        GestureDetector(
+                          child: settingContainer("About us", true),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            FirebaseAuth.instance.signOut();
+                          },
+                          child: settingContainer("Logout", true),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            databasestore().delete();
+                            DatabaseAuth().delete();
+                          },
+                          child: settingContainer("Delete Account", true),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (iseditmode)
+                Expanded(
+                  child: AnimatedContainer(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 34,
+                      // vertical: 34,
+                    ),
+                    duration: Duration(
+                      milliseconds: 350,
+                    ),
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      physics: ScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Name(firstname, lastname),
+                          teztcontainer('Email', email),
+                          teztcontainer('username', username),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                // color: Colors.amber,
+                                margin: EdgeInsets.only(
+                                  top: 20,
+                                  // left: 32,
+                                ),
+                                child: Text(
+                                  "about",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  top: 9,
+                                  // left: 32,
+                                ),
+                                child: TextFormField(
+                                  controller: about,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              alignment: Alignment.center,
+                              backgroundColor: MaterialStatePropertyAll(
+                                Colors.black,
+                              ),
+                            ),
+                            onPressed: () {
+                              databasestore().updata(
+                                  firstname.text,
+                                  lastname.text,
+                                  username.text,
+                                  email.text,
+                                  about.text);
+                              setState(() {
+                                iseditmode = false;
+                                editprofile = false;
+                              });
+                            },
+                            child: Text(
+                              "Save changes",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class settingContainer extends StatefulWidget {
+  final Name;
+  final istrue;
+  settingContainer(this.Name, this.istrue);
+
+  @override
+  State<settingContainer> createState() => _settingContainerState();
+}
+
+class _settingContainerState extends State<settingContainer> {
+  bool isdark = false;
+  void isactive(bool value) {
+    setState(() {
+      isdark = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(
+              top: 16,
+            ),
+            child: Text(
+              widget.Name,
+              style: TextStyle(
+                fontSize: 22.sp,
+                color:
+                    widget.Name == "Logout" || widget.Name == "Delete Account"
+                        ? Colors.red
+                        : Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+          ),
+        ),
+        if (widget.Name == "Dark Mode")
+          SizedBox(
+            width: 140,
+          ),
+        if (widget.Name == "Dark Mode")
+          Switch(
+            value: isdark,
+            onChanged: isactive,
+          ),
+      ],
     );
   }
 }
