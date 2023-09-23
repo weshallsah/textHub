@@ -2,7 +2,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../main.dart';
 import '../message.dart';
 import '../send.dart';
@@ -77,7 +76,7 @@ class _chatRoomState extends State<chatRoom> {
         leading: Container(
           // color: Colors.amber,
           // height: 40,
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             left: 14,
           ),
           child: Image(
@@ -111,7 +110,7 @@ class _chatRoomState extends State<chatRoom> {
                   ChatRoom: widget.RoomId,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Snd(

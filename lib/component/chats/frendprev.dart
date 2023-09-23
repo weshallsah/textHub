@@ -40,19 +40,19 @@ class _prevState extends State<prev> {
         children: [
           if (isarchiv)
             AnimatedContainer(
-              duration: Duration(
+              duration: const Duration(
                 milliseconds: 350,
               ),
               width: 144.w,
               height: 77.h,
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 147, 221, 158),
+                color: const Color.fromARGB(255, 147, 221, 158),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(21.r),
                   bottomRight: Radius.circular(21.r),
                 ),
               ),
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,7 @@ class _prevState extends State<prev> {
                     flex: 1,
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(0),
                       // height: 27.h,
                       // width: 27.w,
                       margin: EdgeInsets.only(
@@ -92,7 +92,7 @@ class _prevState extends State<prev> {
                         // });
                       },
                       child: Container(
-                        padding: EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
                         // margin: EdgeInsets.only(left: 4.2.w),
 
                         child: Text(
@@ -116,14 +116,14 @@ class _prevState extends State<prev> {
                       },
                       child: Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
                         height: 27,
                         // width: 27.w,
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           left: 2,
                           // top: 23.h,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.cancel_outlined,
                         ),
                       ),
@@ -174,10 +174,10 @@ class _prevState extends State<prev> {
                 }
               },
               child: Container(
-                margin: EdgeInsets.symmetric(
+                margin: const EdgeInsets.symmetric(
                   horizontal: 29,
                 ),
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 // color: Colors.amber,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,7 +186,7 @@ class _prevState extends State<prev> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: Container(
+                      child: SizedBox(
                         // color: Colors.amber,
                         height: isarchiv || isdelet ? 25 : 60,
                         child: Image(
@@ -211,7 +211,7 @@ class _prevState extends State<prev> {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 2,
                           ),
                           Text(
@@ -235,19 +235,19 @@ class _prevState extends State<prev> {
           ),
           if (isdelet)
             AnimatedContainer(
-              duration: Duration(
+              duration: const Duration(
                 milliseconds: 350,
               ),
               width: 144.w,
               height: 77.h,
               decoration: BoxDecoration(
-                color: Color(0xFFFF4155),
+                color: const Color(0xFFFF4155),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(21.r),
                   bottomLeft: Radius.circular(21.r),
                 ),
               ),
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.center,
@@ -262,14 +262,14 @@ class _prevState extends State<prev> {
                       },
                       child: Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
                         height: 27,
                         // width: 27.w,
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           left: 2,
                           // top: 23.h,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.cancel_outlined,
                         ),
                       ),
@@ -279,14 +279,14 @@ class _prevState extends State<prev> {
                     flex: 1,
                     child: Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(0),
                       // height: 27.h,
                       // width: 27.w,
                       margin: EdgeInsets.only(
                         left: 2.w,
                         // top: 21.h,
                       ),
-                      child: Icon(Icons.delete_outline),
+                      child: const Icon(Icons.delete_outline),
                     ),
                   ),
                   Expanded(
@@ -306,7 +306,7 @@ class _prevState extends State<prev> {
                         // });
                       },
                       child: Container(
-                        padding: EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
                         // margin: EdgeInsets.only(left: 4.2.w),
 
                         child: Text(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class searchBox extends StatefulWidget {
-  searchBox();
+  const searchBox({super.key});
 
   @override
   State<searchBox> createState() => _searchBoxState();
@@ -25,7 +25,7 @@ class _searchBoxState extends State<searchBox> {
           ),
         ),
         Container(
-          padding: EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
           // color: Colors.amber,
           margin: EdgeInsets.only(
             left: 68.w,
@@ -35,19 +35,19 @@ class _searchBoxState extends State<searchBox> {
           // width: 26.w,
 
           child: IconButton(
-            padding: EdgeInsets.all(0),
+            padding: const EdgeInsets.all(0),
             iconSize: 30.sp,
             onPressed: () {
               setState(() {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => searchPage(),
+                    builder: (context) => const searchPage(),
                   ),
                 );
               });
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           ),
         ),
       ],

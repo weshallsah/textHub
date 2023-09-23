@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class LandIng extends StatefulWidget {
   const LandIng({super.key});
@@ -15,7 +14,7 @@ class _LandIngState extends State<LandIng> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedContainer(
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
         // onEnd: ,
         color: Colors.blueGrey,
         child: Column(
@@ -24,24 +23,24 @@ class _LandIngState extends State<LandIng> {
           children: [
             if(_isblue)
               AnimatedContainer(
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
                 color: Colors.amber,
                 height: 120,
                 // padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
               ),
             if(!_isblue)
               AnimatedContainer(
-                duration: Duration(seconds: 2),
+                duration: const Duration(seconds: 2),
                 color: Colors.cyan,
                 height: 120,
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
               ),
             ElevatedButton(onPressed: (){
               setState(() {
               _isblue=!_isblue;
             });
-            }, child: Text("change"),)
+            }, child: const Text("change"),)
           ],
         ),
       ),

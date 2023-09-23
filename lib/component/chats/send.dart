@@ -9,14 +9,14 @@ import 'package:http/http.dart';
 class Snd extends StatefulWidget {
   final RoomId;
   final userId;
-  const Snd({this.RoomId, this.userId});
+  const Snd({super.key, this.RoomId, this.userId});
 
   @override
   State<Snd> createState() => _SndState();
 }
 
 class _SndState extends State<Snd> {
-  final _controller = new TextEditingController();
+  final _controller = TextEditingController();
   String? NotiID;
   bool _iscursor = false;
   late var entermassage = '';
@@ -25,7 +25,7 @@ class _SndState extends State<Snd> {
       entermassage = _controller.text;
     });
     final roomID = widget.RoomId;
-    final auth = await FirebaseAuth.instance.currentUser;
+    final auth = FirebaseAuth.instance.currentUser;
     final user = await FirebaseFirestore.instance
         .collection('user')
         .doc(auth?.uid)
@@ -75,7 +75,7 @@ class _SndState extends State<Snd> {
       'Username': user['Username'],
       'userProf': user['Avtar_URL'],
     }).then((value) {
-      var res;
+      Future<Response> res;
       try {
         res = post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
             body: jsonEncode(Body),
@@ -105,10 +105,10 @@ class _SndState extends State<Snd> {
             // fit: ,
             flex: 3,
             child: Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                 bottom: 12,
               ),
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               height: 56,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
@@ -139,7 +139,7 @@ class _SndState extends State<Snd> {
                   hintText: " Type Something",
                   hintStyle: TextStyle(
                     fontSize: 15.sp,
-                    color: Color.fromARGB(211, 166, 166, 166),
+                    color: const Color.fromARGB(211, 166, 166, 166),
                   ),
                   border: InputBorder.none,
                 ),
@@ -150,14 +150,14 @@ class _SndState extends State<Snd> {
             flex: 1,
             child: Container(
               height: 53,
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                 bottom: 12,
               ),
               child: IconButton(
                 onPressed: () {
                   sndmassage();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.send_rounded,
                   color: Colors.white,
                 ),

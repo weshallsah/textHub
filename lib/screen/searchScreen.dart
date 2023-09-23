@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
-final ChatId = const Uuid();
+const ChatId = Uuid();
 
 class searchPage extends StatefulWidget {
   const searchPage({super.key});
@@ -25,8 +25,8 @@ class _searchPageState extends State<searchPage> {
     final myuid = FirebaseAuth.instance.currentUser?.uid;
     final Room = await FirebaseFirestore.instance
         .collection('Chat')
-        .where('FrndConver.${uid}', isEqualTo: true)
-        .where('FrndConver.${myuid}')
+        .where('FrndConver.$uid', isEqualTo: true)
+        .where('FrndConver.$myuid')
         .get();
     if (myuid == uid) {
       var keycnt;
@@ -58,7 +58,7 @@ class _searchPageState extends State<searchPage> {
           },
         });
       }
-    } else if (Room.docs.length > 0) {
+    } else if (Room.docs.isNotEmpty) {
       ChatRoomid = await Room.docs[0].data()['ChatRoomId'];
     } else {
       ChatRoomid = ChatId.v1();
@@ -98,7 +98,7 @@ class _searchPageState extends State<searchPage> {
           child: Row(
             children: [
               Container(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 // margin: EdgeInsets.only(
                 //   top: 40.h,
                 //   left: 34.w,
@@ -137,7 +137,7 @@ class _searchPageState extends State<searchPage> {
               ),
               GestureDetector(
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 350),
+                  duration: const Duration(milliseconds: 350),
                   margin: EdgeInsets.only(left: 107.w),
                   height: 31.h,
                   width: 99.w,
@@ -224,7 +224,7 @@ class _searchPageState extends State<searchPage> {
             // if(Searchuser.text==)
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('user')
@@ -241,7 +241,7 @@ class _searchPageState extends State<searchPage> {
                       }
                       if (snapshot.hasData) {
                         final searchuser = snapshot.data?.docs;
-                        if (searchuser != null && searchuser.length > 0) {
+                        if (searchuser != null && searchuser.isNotEmpty) {
                           print(searchuser);
                           return ListView.builder(
                             itemCount: searchuser.length,
@@ -328,7 +328,7 @@ class _searchPageState extends State<searchPage> {
                         return Container();
                       }
                     } else {
-                      return Center(
+                      return const Center(
                         child: Text(
                           "no user found",
                           style: TextStyle(fontSize: 28),

@@ -24,7 +24,7 @@ class _ArchiveState extends State<Archive> {
             ),
             Flexible(
               child: Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   left: 4,
                 ),
                 decoration: BoxDecoration(
@@ -57,7 +57,7 @@ class _ArchiveState extends State<Archive> {
           // }
         },
         child: AnimatedContainer(
-          duration: Duration(
+          duration: const Duration(
             milliseconds: 350,
           ),
           color: Colors.white,
@@ -65,11 +65,11 @@ class _ArchiveState extends State<Archive> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AnimatedContainer(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   top: 31,
                   left: 39,
                 ),
-                duration: Duration(
+                duration: const Duration(
                   milliseconds: 350,
                 ),
                 child: Row(
@@ -79,19 +79,19 @@ class _ArchiveState extends State<Archive> {
                     Flexible(
                       flex: 1,
                       child: Container(
-                        child: Icon(
+                        child: const Icon(
                           Icons.archive_outlined,
                           color: Colors.black,
                         ),
                       ),
                     ),
-                    Flexible(
+                    const Flexible(
                       flex: 1,
                       child: SizedBox(
                         width: 14,
                       ),
                     ),
-                    Flexible(
+                    const Flexible(
                       flex: 2,
                       child: Text(
                         "Archive",

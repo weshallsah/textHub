@@ -43,8 +43,8 @@ class message extends StatelessWidget {
                     DateTime.now().day - docmassage?[index]['isvanishDay'];
                 final isvanishTime =
                     DateTime.now().hour - docmassage?[index]['isvanishTime'];
-                print("Time : ${isvanishTime}");
-                print("Day : ${isvanishday}");
+                print("Time : $isvanishTime");
+                print("Day : $isvanishday");
                 print(DateTime.now().hour);
                 if (isvanishday == 1 && isvanishTime >= 0) {
                   // print("Entered");
@@ -64,7 +64,7 @@ class message extends StatelessWidget {
                       .delete();
                 }
                 return SingleChildScrollView(
-                  physics: ScrollPhysics(),
+                  physics: const ScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,

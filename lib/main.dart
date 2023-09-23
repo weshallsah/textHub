@@ -2,7 +2,6 @@ import 'package:chatbot/component/Auth/auth.dart';
 import 'package:chatbot/component/Auth/uploadAvtar.dart';
 import 'package:chatbot/component/Auth/verify.dart';
 import 'package:chatbot/screen/HomeScreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,11 +62,12 @@ class _MyAppState extends State<MyApp> {
       iscomplete = istrue;
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(375, 812),
+      designSize: const Size(375, 812),
       minTextAdapt: true,
       scaleByHeight: true,
       splitScreenMode: true,
@@ -83,11 +83,11 @@ class _MyAppState extends State<MyApp> {
                 if (snapshot.data!.emailVerified) {
                   print(iscomplete);
                   if (iscomplete) {
-                    return Home();
+                    return const Home();
                   }
                   return chooseAvtar(check, false, URL);
                 }
-                return verify();
+                return const verify();
               }
               return Auth(check);
             },

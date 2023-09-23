@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 class PickImg extends StatefulWidget {
   final void Function(File Img) imgpkg;
   // final _islogin;
-  const PickImg(this.imgpkg);
+  const PickImg(this.imgpkg, {super.key});
 
   @override
   State<PickImg> createState() => _PickImgState();
@@ -16,9 +16,9 @@ class _PickImgState extends State<PickImg> {
   // bool ison=true;
   String URL = "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d";
   File? _img;
-  void _pickImg(String? _Source) async {
+  void _pickImg(String? Source) async {
     print("clicked");
-    if(_Source == "gallery"){
+    if(Source == "gallery"){
       final pickedimgfile =
         await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 20);
     setState(() {
@@ -57,7 +57,7 @@ class _PickImgState extends State<PickImg> {
                           barrierLabel: "Label",
                           barrierDismissible: true,
                           barrierColor: Colors.black.withOpacity(0.5),
-                          transitionDuration: Duration(milliseconds: 700),
+                          transitionDuration: const Duration(milliseconds: 700),
                           context: context,
                           pageBuilder: (context, anim1, anim2) {
                             return Align(
@@ -90,8 +90,8 @@ class _PickImgState extends State<PickImg> {
                                         onTap: () {
                                           _pickImg("gallery");
                                         },
-                                        child: Column(
-                                          children: const [
+                                        child: const Column(
+                                          children: [
                                             Icon(
                                               Icons.filter,
                                               size: 50,
@@ -115,8 +115,8 @@ class _PickImgState extends State<PickImg> {
                                         onTap: () {
                                           _pickImg("Camera");
                                         },
-                                        child: Column(
-                                          children: const [
+                                        child: const Column(
+                                          children: [
                                             Icon(
                                               Icons.camera,
                                               size: 50,
@@ -140,17 +140,17 @@ class _PickImgState extends State<PickImg> {
                           transitionBuilder: (context, anim1, anim2, child) {
                             return SlideTransition(
                               position:
-                                  Tween(begin: Offset(0, 1), end: Offset(0, 0))
+                                  Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
                                       .animate(anim1),
                               child: child,
                             );
                           },
                         );
             },
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(Icons.image),
                 Text(
                   "add image",

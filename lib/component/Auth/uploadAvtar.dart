@@ -8,14 +8,20 @@ class chooseAvtar extends StatefulWidget {
   final Function(bool istrue) ischeck;
   final isprofile;
   TextEditingController URL;
-  chooseAvtar(this.ischeck,this.isprofile,this.URL);
+  chooseAvtar(this.ischeck, this.isprofile, this.URL,);
 
   @override
   State<chooseAvtar> createState() => _chooseAvtarState();
 }
 
 class _chooseAvtarState extends State<chooseAvtar> {
-  
+  TextEditingController username=TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    databasestore().fetchusername(username);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +34,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
             ),
             Flexible(
               child: Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   left: 4,
                 ),
                 decoration: BoxDecoration(
@@ -52,12 +58,12 @@ class _chooseAvtarState extends State<chooseAvtar> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               top: 30,
               left: 22,
             ),
             child: Text(
-              widget.isprofile?  "Edit Avtar":"complete profile",
+              widget.isprofile ? "Edit Avtar" : "complete profile",
               style: TextStyle(
                 fontSize: 28.sp,
                 color: Colors.white,
@@ -65,7 +71,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               left: 22,
             ),
             child: Text(
@@ -77,7 +83,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 22, top: 30),
+            margin: const EdgeInsets.only(left: 22, top: 30),
             child: Row(
               children: [
                 Expanded(
@@ -94,7 +100,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 23,
                 ),
                 Expanded(
@@ -111,7 +117,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
                           ),
                         ),
                         Text(
-                          "VishalSah",
+                          "vishal sah",
                           style: TextStyle(
                             fontSize: 28.sp,
                             color: Colors.white,
@@ -137,7 +143,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
           ),
           Container(
             alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               top: 55,
             ),
             // color: Colors.amber,
@@ -147,12 +153,12 @@ class _chooseAvtarState extends State<chooseAvtar> {
                 setState(() {
                   widget.ischeck(true);
                 });
-                if(widget.isprofile==true){
+                if (widget.isprofile == true) {
                   Navigator.pop(context);
                 }
               },
-              child: Text(
-                "next",
+              child: const Text(
+                "Done",
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -161,7 +167,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
           ),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(41),
@@ -169,7 +175,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
                 ),
               ),
               child: Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   top: 38,
                   left: 28,
                   right: 28,
@@ -185,7 +191,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
                         final Avtar = snapshot.data?.docs[0]['avtar'];
                         return GridView.builder(
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 4),
                           itemCount: Avtar.length,
                           itemBuilder: (context, index) {
@@ -204,7 +210,7 @@ class _chooseAvtarState extends State<chooseAvtar> {
                                 );
                               },
                               child: Container(
-                                margin: EdgeInsets.all(
+                                margin: const EdgeInsets.all(
                                   5,
                                 ),
                                 decoration: BoxDecoration(
@@ -221,7 +227,6 @@ class _chooseAvtarState extends State<chooseAvtar> {
                       }
                       return Container();
                     }
-                    ;
                     return Container();
                   },
                 ),

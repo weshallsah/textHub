@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class chatBox extends StatefulWidget {
   final drag_, docs, Myuid;
-  chatBox({
+  const chatBox({
     super.key,
     this.drag_,
     this.docs,
@@ -22,19 +22,19 @@ class _chatBoxState extends State<chatBox> {
     return Expanded(
       flex: 3,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 350),
+        duration: const Duration(milliseconds: 350),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: widget.drag_ ? Radius.circular(0) : Radius.circular(41.r),
-            topRight: widget.drag_ ? Radius.circular(0) : Radius.circular(41.r),
+            topLeft: widget.drag_ ? const Radius.circular(0) : Radius.circular(41.r),
+            topRight: widget.drag_ ? const Radius.circular(0) : Radius.circular(41.r),
           ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            searchBox(),
+            const searchBox(),
             ListFrnd(
               docs: widget.docs,
               myuid: widget.Myuid,

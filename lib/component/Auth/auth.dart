@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Auth extends StatefulWidget {
   final Function(bool istrue) iscompleter;
-  Auth(this.iscompleter);
+  const Auth(this.iscompleter, {super.key});
 
   @override
   State<Auth> createState() => _AuthState();
@@ -32,7 +32,7 @@ class _AuthState extends State<Auth> {
             ),
             Flexible(
               child: Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   left: 4,
                 ),
                 decoration: BoxDecoration(
@@ -62,8 +62,8 @@ class _AuthState extends State<Auth> {
               },
               child: Container(
                 // height: 27,
-                padding: EdgeInsets.all(4),
-                margin: EdgeInsets.only(
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.only(
                   right: 21,
                   bottom: 11,
                   top: 12,
@@ -96,7 +96,7 @@ class _AuthState extends State<Auth> {
               top: islogin ? 88 : 44,
               left: islogin ? 112 : 32,
             ),
-            duration: Duration(milliseconds: 350),
+            duration: const Duration(milliseconds: 350),
             child: Text(
               islogin ? "Login" : "Register",
               style: TextStyle(color: Colors.white, fontSize: 28.sp),
@@ -107,7 +107,7 @@ class _AuthState extends State<Auth> {
               // top: 44,
               left: islogin ? 112 : 32,
             ),
-            duration: Duration(milliseconds: 350),
+            duration: const Duration(milliseconds: 350),
             child: Text(
               islogin ? "Login to see your chats" : "Create a new account",
               style: TextStyle(color: Colors.white, fontSize: 13.sp),
@@ -120,11 +120,11 @@ class _AuthState extends State<Auth> {
                 left: 0,
                 right: 0,
               ),
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 34,
                 // vertical: 34,
               ),
-              duration: Duration(
+              duration: const Duration(
                 milliseconds: 350,
               ),
               alignment: Alignment.center,
@@ -139,7 +139,7 @@ class _AuthState extends State<Auth> {
               ),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                physics: ScrollPhysics(),
+                physics: const ScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -159,7 +159,7 @@ class _AuthState extends State<Auth> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 4,
                             ),
                             TextButton(
@@ -167,7 +167,7 @@ class _AuthState extends State<Auth> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => forgot(),
+                                    builder: (context) => const forgot(),
                                   ),
                                 );
                               },
@@ -190,17 +190,17 @@ class _AuthState extends State<Auth> {
                             widget.iscompleter(false);
                           });
                         }
-                        final _auth = DatabaseAuth();
-                        _auth.FireAuth(firstname.text, lastname.text,
+                        final auth = DatabaseAuth();
+                        auth.FireAuth(firstname.text, lastname.text,
                             email.text, password.text, username.text, islogin);
                       },
                       child: Container(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           left: 38,
                           top: 27,
                           right: 45,
                         ),
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           top: 11,
                           bottom: 11,
                         ),
@@ -233,7 +233,7 @@ class _AuthState extends State<Auth> {
 class Name extends StatefulWidget {
   TextEditingController FirstName;
   TextEditingController LastName;
-  Name(this.FirstName, this.LastName);
+  Name(this.FirstName, this.LastName, {super.key});
 
   @override
   State<Name> createState() => _NameState();
@@ -282,23 +282,23 @@ class _NameState extends State<Name> {
                 // width: 130,
 
                 child: TextField(
-                  decoration: InputDecoration(),
+                  decoration: const InputDecoration(),
                   controller: widget.FirstName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                   ),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 12,
             ),
             Flexible(
               child: Container(
                 child: TextField(
                   controller: widget.LastName,
-                  style: TextStyle(
-                    color: Colors.black,
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 3, 3, 3),
                   ),
                 ),
               ),
@@ -313,7 +313,7 @@ class _NameState extends State<Name> {
 class teztcontainer extends StatefulWidget {
   String Text;
   TextEditingController input;
-  teztcontainer(this.Text, this.input);
+  teztcontainer(this.Text, this.input, {super.key});
 
   @override
   State<teztcontainer> createState() => _teztcontainerState();
@@ -327,7 +327,7 @@ class _teztcontainerState extends State<teztcontainer> {
       children: [
         Container(
           // color: Colors.amber,
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             top: 20,
             // left: 32,
           ),
@@ -340,13 +340,13 @@ class _teztcontainerState extends State<teztcontainer> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             top: 9,
             // left: 32,
           ),
           child: TextFormField(
             controller: widget.input,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
             ),
             validator: (value) {

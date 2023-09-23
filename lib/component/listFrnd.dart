@@ -32,10 +32,10 @@ class _ListFrndState extends State<ListFrnd> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final FrndList = snapshot.data?.docs;
-          if (FrndList != null && FrndList.length > 0) {
+          if (FrndList != null && FrndList.isNotEmpty) {
             return Flexible(
               child: ListView.builder(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 itemCount: FrndList.length,
                 itemBuilder: (context, index) {
                   roomId = FrndList[index]['ChatRoomId'];

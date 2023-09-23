@@ -27,6 +27,12 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+def keystoreProperties = new Properties()
+   def keystorePropertiesFile = rootProject.file('key.properties')
+   if (keystorePropertiesFile.exists()) {
+       keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+   }
+
 android {
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
@@ -50,19 +56,45 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
     }
-
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-        }
+    lint {
+        // Turns off checks for the issue IDs you specify.
+        disable += "TypographyFractions" + "TypographyQuotes"
+        // Turns on checks for the issue IDs you specify. These checks are in
+        // addition to the default lint checks.
+        enable += "RtlHardcoded" + "RtlCompat" + "RtlEnabled"
+        // To enable checks for only a subset of issue IDs and ignore all others,
+        // list the issue IDs with the 'check' property instead. This property overrides
+        // any issue IDs you enable or disable using the properties above.
+        checkOnly += "NewApi" + "InlinedApi"
+        // If set to true, turns off analysis progress reporting by lint.
+        quiet = true
+        // If set to true (default), stops the build if errors are found.
+        abortOnError = false
+        // If set to true, lint only reports errors.
+        ignoreWarnings = true
+        // If set to true, lint also checks all dependencies as part of its analysis.
+        // Recommended for projects consisting of an app with library dependencies.
+        checkDependencies = true
     }
+
+    signingConfigs {
+       release {
+           keyAlias keystoreProperties['keyAlias']
+           keyPassword keystoreProperties['keyPassword']
+           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+           storePassword keystoreProperties['storePassword']
+       }
+   }
+   buildTypes {
+       release {
+           signingConfig signingConfigs.release
+       }
+   }
 }
 
 flutter {

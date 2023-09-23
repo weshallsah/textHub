@@ -1,10 +1,7 @@
-import 'package:chatbot/component/Auth/uploadAvtar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class verify extends StatefulWidget {
   const verify({super.key});
@@ -47,7 +44,7 @@ class _verifyState extends State<verify> {
           child: Row(
             children: [
               Container(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 child: Text(
                   "Text",
                   style: Theme.of(context).textTheme.titleMedium,
@@ -80,7 +77,7 @@ class _verifyState extends State<verify> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               top: 149,
               left: 39,
             ),
@@ -94,7 +91,7 @@ class _verifyState extends State<verify> {
           ),
           Container(
             // color: Colors.amber,
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
               left: 39,
             ),
             child: Text(
@@ -107,10 +104,10 @@ class _verifyState extends State<verify> {
           ),
           Expanded(
             child: Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                 top: 140,
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(41),
                   topRight: Radius.circular(41),
@@ -136,7 +133,7 @@ class _verifyState extends State<verify> {
                           fontSize: 18.sp,
                         ),
                       ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     ElevatedButton(

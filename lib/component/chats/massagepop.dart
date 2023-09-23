@@ -7,7 +7,7 @@ class massagePop extends StatelessWidget {
   final _Massage;
   final _photourl;
   final _isme;
-  const massagePop(this._Massage, this._isme, this._photourl);
+  const massagePop(this._Massage, this._isme, this._photourl, {super.key});
   // print()
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class massagePop extends StatelessWidget {
       children: [
         Container(
           // color: Colors.amber,
-          margin: EdgeInsets.symmetric(
+          margin: const EdgeInsets.symmetric(
             horizontal: 63,
           ),
           padding: EdgeInsets.symmetric(
@@ -26,7 +26,7 @@ class massagePop extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             // color: Colors.amber,
-            color: Color.fromARGB(102, 96, 125, 139),
+            color: const Color.fromARGB(102, 96, 125, 139),
             border: Border.all(
               color: Colors.white,
               width: 1,
@@ -48,7 +48,7 @@ class massagePop extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(
+          margin: const EdgeInsets.symmetric(
             horizontal: 23,
           ),
           height: 34,

@@ -29,7 +29,7 @@ class _forgotState extends State<forgot> {
           child: Row(
             children: [
               Container(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 // margin: EdgeInsets.only(
                 //   top: 40.h,
                 //   left: 34.w,
@@ -68,7 +68,7 @@ class _forgotState extends State<forgot> {
           children: [
             Container(
               alignment: Alignment.bottomLeft,
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               margin: EdgeInsets.only(
                 left: 39.w,
                 top: 149.h,
@@ -87,7 +87,7 @@ class _forgotState extends State<forgot> {
             ),
             Container(
               alignment: Alignment.topLeft,
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               margin: EdgeInsets.only(
                 left: 39.w,
               ),

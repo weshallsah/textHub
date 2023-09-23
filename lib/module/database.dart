@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -83,18 +82,17 @@ class databasestore {
         'Username': username,
         'Email': email,
         'about': About,
-        'Avtar_URL':
-            "https://firebasestorage.googleapis.com/v0/b/chatbox-1cbb4.appspot.com/o/avtar%2Fcommanprofileavtar.png?alt=media&token=b9791391-f85a-4e01-be99-ae7fd7f0dd7d",
       },
     ).whenComplete(() => null);
   }
 
   void fetchdata(
-      TextEditingController Firstname,
-      TextEditingController Lastname,
-      TextEditingController email,
-      TextEditingController username,
-      TextEditingController about) async {
+    TextEditingController Firstname,
+    TextEditingController Lastname,
+    TextEditingController email,
+    TextEditingController username,
+    TextEditingController about,
+  ) async {
     await fireStrore.collection('user').doc(Auth).get().then(
       (value) {
         Firstname.text = value['firstname'];
@@ -106,9 +104,15 @@ class databasestore {
     );
   }
 
-  void uploadAvtar(String URL) {
+  void fetchusername(TextEditingController username) async {
+    await fireStrore.collection('user').doc(Auth).get().then((value) {
+      username.text = value['Username'];
+    });
+  }
+
+  void uploadAvtar(String URL) async {
     // print(URL);
-    fireStrore.collection('user').doc(Auth).update(
+    await fireStrore.collection('user').doc(Auth).update(
       {
         'Avtar_URL': URL,
       },

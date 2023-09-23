@@ -8,7 +8,7 @@ class AppTheme {
   TextStyle? titleHubup;
   static ThemeData LigthTheme = ThemeData();
   static ThemeData darkTheme = ThemeData(
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
     ),
     textTheme: TextTheme(

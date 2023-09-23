@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 
 class LayoutScreen extends StatelessWidget {
@@ -12,10 +11,10 @@ class LayoutScreen extends StatelessWidget {
         builder: (context, constraints) {
           if (constraints.maxWidth > 600) {
             // Use a different layout for larger screens
-            return DesktopLayout();
+            return const DesktopLayout();
           } else {
             // Use a default layout for smaller screens
-            return MobileLayout();
+            return const MobileLayout();
           }
         },
       ),
@@ -24,7 +23,7 @@ class LayoutScreen extends StatelessWidget {
 }
 
 class MobileLayout extends StatelessWidget {
-  const MobileLayout();
+  const MobileLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +32,9 @@ class MobileLayout extends StatelessWidget {
 }
 
 class DesktopLayout extends StatelessWidget {
+  const DesktopLayout({super.key});
+
+  @override
   Widget build(BuildContext context) {
     return Container();
   }

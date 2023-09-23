@@ -1,6 +1,5 @@
 import 'package:chatbot/component/chats/Archive.dart';
 import 'package:chatbot/component/greetme.dart';
-import 'package:chatbot/module/database.dart';
 import 'package:chatbot/screen/ChatBox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +15,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String? userName = '';
-  String? profilimage = '';
+  TextEditingController profilimage = TextEditingController();
   String? myuid = '';
   String? docs;
   String? roomId;
@@ -32,13 +31,13 @@ class _HomeState extends State<Home> {
         if (snapshot.exists) {
           setState(() {
             userName = snapshot.data()!['Username'];
-            profilimage = snapshot.data()!['Avtar_URL'];
+            profilimage.text = snapshot.data()!['Avtar_URL'];
             myuid = snapshot.data()!['uid'];
           });
         }
       },
     );
-    docs = 'FrndConver.${myuid}';
+    docs = 'FrndConver.$myuid';
     // print('geting data: $docs');
   }
 
@@ -58,7 +57,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // _dragup = false;
+    getData();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -70,7 +69,7 @@ class _HomeState extends State<Home> {
             ),
             Flexible(
               child: Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   left: 4,
                 ),
                 decoration: BoxDecoration(
@@ -106,8 +105,8 @@ class _HomeState extends State<Home> {
               },
               child: Container(
                 // height: 27,
-                padding: EdgeInsets.all(4),
-                margin: EdgeInsets.only(
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.only(
                   right: 21,
                   bottom: 11,
                   top: 12,
