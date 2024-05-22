@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:texthub/DB/controller/DB.controller.dart';
 import 'package:texthub/Screen/Auth_ui.dart';
 
 class Splash extends StatelessWidget {
@@ -63,9 +64,11 @@ class Splash extends StatelessWidget {
           Container(
             margin: EdgeInsets.symmetric(
               horizontal: sizes.width * 0.065,
-              vertical: sizes.height * 0.02
+              vertical: sizes.height * 0.02,
             ),
-            padding: EdgeInsets.symmetric(horizontal: sizes.width * 0.01),
+            padding: EdgeInsets.symmetric(
+              horizontal: sizes.width * 0.01,
+            ),
             decoration: BoxDecoration(
               color: Colors.blueGrey.shade100,
               borderRadius: BorderRadius.circular(
@@ -90,10 +93,7 @@ class Splash extends StatelessWidget {
                   ),
                   Text(
                     "Get Start",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     width: sizes.width * 0.05,
@@ -106,7 +106,6 @@ class Splash extends StatelessWidget {
               ),
             ),
           ),
-          
         ],
       ),
     );

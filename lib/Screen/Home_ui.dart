@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:texthub/Component/ChatRoom.component.dart';
 import 'package:texthub/Component/Roomcard.component.dart';
 import 'package:texthub/Component/Search.component.dart';
 
@@ -21,8 +23,10 @@ class Home extends StatelessWidget {
                   // itemCount: 5,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () {},
-                      child: RoomCard(),
+                      onTap: () {
+                        Get.to(() => ChatRoom());
+                      },
+                      // child: RoomCard(),
                     );
                   },
                 )),

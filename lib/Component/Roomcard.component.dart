@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:texthub/Controller/Home.controller.dart';
 
 class RoomCard extends StatelessWidget {
-  const RoomCard({super.key});
+  Homecontroller controller;
+  RoomCard(this.controller, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +19,17 @@ class RoomCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 35,
-            foregroundImage: NetworkImage(
-              "https://b.fssta.com/uploads/application/soccer/headshots/713.png",
-            ),
+            foregroundImage:
+                controller.isavatar.value ? FileImage(controller.avatar) : null,
+            child: !controller.isavatar.value
+                ? SvgPicture.asset(
+                    'assets/svg/userAvatar.svg',
+                    // fit: BoxFit.fill,
+                    height: MediaQuery.of(context).size.height <= 700
+                        ? (MediaQuery.of(context).size.height * 0.13)
+                        : (MediaQuery.of(context).size.height * 0.163),
+                  )
+                : null,
             // backgroundImage: NetworkImage(
             //     "https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png"),
           ),
