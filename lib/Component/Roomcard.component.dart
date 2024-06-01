@@ -24,7 +24,6 @@ class RoomCard extends StatelessWidget {
             child: !controller.isavatar.value
                 ? SvgPicture.asset(
                     'assets/svg/userAvatar.svg',
-                    // fit: BoxFit.fill,
                     height: MediaQuery.of(context).size.height <= 700
                         ? (MediaQuery.of(context).size.height * 0.13)
                         : (MediaQuery.of(context).size.height * 0.163),

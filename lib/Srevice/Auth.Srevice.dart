@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:api_cache_manager/models/cache_db_model.dart';
+import 'package:get/get.dart';
 import 'package:texthub/Controller/splash.controller.dart';
 import 'package:texthub/DB/controller/DB.controller.dart';
 import 'package:texthub/DB/model/user.model.dart';
@@ -13,19 +14,18 @@ class AuthSrevice {
 
   Future<void> logout() async {
     await APICacheManager().deleteCache("user");
-    SplashController();
+    Get.put(SplashController());
   }
 
   Future<void> setlogin(User user) async {
+    print("user :- ${user.toMap()}");
     APICacheDBModel cacheDBModel = APICacheDBModel(
       key: "user",
       syncData: jsonEncode(user.toMap()),
     );
     await APICacheManager().addCacheData(cacheDBModel);
-    SplashController();
+    Get.put(SplashController());
     DBcontroller().Createdb();
-    // print(cacheDBModel);
-    // return cacheDBModel !=null;
   }
 
   Future<User?> getuser() async {
@@ -33,11 +33,11 @@ class AuthSrevice {
     if (user.key.isNotEmpty) {
       final cachedata = jsonDecode(user.syncData);
       return User(
-          uid: cachedata.uid,
-          phone: cachedata.phone,
-          name: cachedata.name,
-          email: cachedata.email,
-          avatar: cachedata.avatar);
+          uid: cachedata['uid'],
+          phone: cachedata['phone'],
+          name: cachedata['name'],
+          email: cachedata['email'],
+          avatar: cachedata['avatar']);
     }
   }
 }

@@ -26,7 +26,7 @@ class User {
       "name": name,
       "phone": phone,
       "email": email,
-      "avatar": avatar
+      "avatar": avatar,
     };
   }
 

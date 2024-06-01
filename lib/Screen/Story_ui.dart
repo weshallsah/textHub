@@ -91,7 +91,7 @@ class Story extends StatelessWidget {
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.088,
                     // color: Colors.grey,
-                    margin: EdgeInsets.symmetric(vertical: 10),
+                    margin: EdgeInsets.symmetric(vertical: 5),
                     child: Row(
                       children: [
                         SizedBox(

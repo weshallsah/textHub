@@ -20,12 +20,6 @@ class DBcontroller {
                 uid text primary key autoincrement, 
                 name text not null,
                 phone text not null,
-                email text
-              )''');
-          await db.execute('''
-              CREATE TABLE chatrooms (
-                phone text primary key,
-                name text not null,
                 avatar BLOB
               )''');
           await db.execute('''
@@ -42,6 +36,11 @@ class DBcontroller {
     }
   }
 
+  Future InsertUser(User user) async {
+    final path = await DBname();
+    Database db = await openDatabase(path);
+  }
+
   Future InsertChart(Chatroom chat) async {
     try {
       final path = await DBname();
@@ -50,17 +49,17 @@ class DBcontroller {
       if (user == null) {
         throw "user not found";
       }
-      final res = await db.query("${user.phone}-${chat.phone}");
-      if (res.isEmpty) {
-        await db.execute('''
-                CREATE TABLE ${user.phone}-${chat.phone}(
-                  uid integer primary key AUTOINCREMENT,
-                  phone integer not null,
-                  message text not null,
-                  createAt DATETIME,
-                )''');
-      }
-      db.insert("${user.phone}-${chat.phone}", chat.toMap());
+      // final res = await db.query("${user.phone}-${chat.friend}");
+      // if (res.isEmpty) {
+      //   await db.execute('''
+      //           CREATE TABLE ${user.phone}-${chat.friend}(
+      //             uid integer primary key AUTOINCREMENT,
+      //             phone integer not null,
+      //             message text not null,
+      //             createAt DATETIME,
+      //           )''');
+      // }
+      // db.insert("${user.phone}-${chat.}", chat.toMap());
     } catch (e) {
       print("Error :- ${e}");
     }

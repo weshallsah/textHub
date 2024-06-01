@@ -48,10 +48,13 @@ class VerifyOTP extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 25,
-              ),
+              // alignment: Alignment.center,
+              // margin: EdgeInsets.symmetric(
+              //   horizontal: 20,
+              // ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "OTP sended on ${getotpcontroller.phone.text}",

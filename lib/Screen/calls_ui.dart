@@ -40,7 +40,7 @@ class Calls extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Container(
                     height: MediaQuery.of(context).size.height * 0.09,
-                    margin: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(5),
                     // color: Colors.amber,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

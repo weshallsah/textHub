@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:texthub/Controller/Profile.controller.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  Profile({super.key});
+
+  final Profilecontroller profilecontroller = Get.put(Profilecontroller());
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height );
+    print(MediaQuery.of(context).size.height);
     return Scaffold(
         body: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,30 +34,41 @@ class Profile extends StatelessWidget {
         Container(
           // height: MediaQuery.of(context).size.height * 0.13,
           // color: Colors.amber,
-          child: CircleAvatar(
-            radius: MediaQuery.of(context).size.height <=700
-            ?(MediaQuery.of(context).size.height * 0.13) / 2 
-            :(MediaQuery.of(context).size.height * 0.165) / 2,
-            foregroundImage: NetworkImage(
-              "https://b.fssta.com/uploads/application/soccer/headshots/713.png",
-              // scale: 5
-            ),
-          ),
+          child: GetBuilder<Profilecontroller>(builder: (controller) {
+            return CircleAvatar(
+              radius: MediaQuery.of(context).size.height <= 700
+                  ? (MediaQuery.of(context).size.height * 0.13) / 2
+                  : (MediaQuery.of(context).size.height * 0.165) / 2,
+              foregroundImage: controller.avatar != null
+                  ? FileImage(controller.avatar as File)
+                  : null,
+              child: controller.avatar == null
+                  ? SvgPicture.asset(
+                      'assets/svg/userAvatar.svg',
+                      height: MediaQuery.of(context).size.height <= 700
+                          ? (MediaQuery.of(context).size.height * 0.13)
+                          : (MediaQuery.of(context).size.height * 0.163),
+                    )
+                  : null,
+            );
+          }),
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.01,
         ),
-        Container(
-          // color: Colors.amber,
-          height: MediaQuery.of(context).size.height * 0.04,
-          child: Text(
-            "Weshallsah",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+        GetBuilder<Profilecontroller>(builder: (controller) {
+          return Container(
+            // color: Colors.amber,
+            height: MediaQuery.of(context).size.height * 0.04,
+            child: Text(
+              controller.name.value,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-        ),
+          );
+        }),
         Expanded(
           child: Container(
             height: MediaQuery.of(context).size.height * 0.4,
@@ -88,7 +106,9 @@ class Profile extends StatelessWidget {
                   enableFeedback: true,
                   // hoverColor: Colors.gr,
                   borderRadius: BorderRadius.circular(20),
-                  onTap: () {},
+                  onTap: () {
+                    profilecontroller.logout();
+                  },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.086,
                     decoration: BoxDecoration(

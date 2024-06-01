@@ -1,20 +1,22 @@
 class Chatroom {
-  int uid;
-  int phone;
+  String uid;
+  String sender;
+  String rechiver;
   String message;
   DateTime dateTime;
-  Chatroom(this.uid, this.phone, this.message, this.dateTime);
+  Chatroom(this.uid, this.sender, this.message, this.dateTime, this.rechiver);
 
   Map<String, dynamic> toMap() {
     return {
       "uid": uid,
-      "phone": phone,
+      "sender": sender,
+      "reciver": rechiver,
       "message": message,
       "DateTime": dateTime,
     };
   }
 
   String toString() {
-    return "uid:${uid}, phone:${phone}, message:${message}, datetime:${dateTime}";
+    return "uid:${uid}, sender:${sender} , rechiver:${rechiver}, message:${message}, datetime:${dateTime}";
   }
 }

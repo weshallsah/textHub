@@ -25,17 +25,25 @@ class Nav extends StatelessWidget {
             builder: (controller) {
               switch (controller.current.value) {
                 case "Chat":
-                  return Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.archive_outlined),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.person_add_alt),
-                      ),
-                    ],
+                  return GetBuilder<NavController>(
+                    builder: (controller) {
+                      return Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+
+                            },
+                            icon: Icon(Icons.archive_outlined),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              controller.adduser();
+                            },
+                            icon: Icon(Icons.person_add_alt),
+                          ),
+                        ],
+                      );
+                    }
                   );
                 default:
                   return IconButton(

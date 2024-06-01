@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:texthub/Component/ChatRoom.component.dart';
 import 'package:texthub/Component/Roomcard.component.dart';
 import 'package:texthub/Component/Search.component.dart';
+import 'package:texthub/Controller/Home.controller.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
-
+  Home({super.key});
+  final homecontroller = Get.put(Homecontroller());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +27,7 @@ class Home extends StatelessWidget {
                       onTap: () {
                         Get.to(() => ChatRoom());
                       },
-                      // child: RoomCard(),
+                      child: RoomCard(homecontroller),
                     );
                   },
                 )),

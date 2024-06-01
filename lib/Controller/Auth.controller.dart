@@ -33,7 +33,7 @@ class AuthController extends GetxController {
       Uri.parse("https://zk29l5cf-9000.inc1.devtunnels.ms/api/login"),
     );
     request.fields['name'] = name.text;
-    request.fields['phone'] = "9511286245";
+    request.fields['phone'] = phone.text;
     print(image.path);
     http.MultipartFile file = await http.MultipartFile.fromPath(
       'avatar',
@@ -47,18 +47,21 @@ class AuthController extends GetxController {
       print(res.body);
       payload = jsonDecode(res.body);
     });
+    print("Avatar :-  ${avatar.path}");
     print("payload := ${payload}");
     if (payload['status'] == 200) {
+      print(avatar.path);
       final res = payload['payload'];
       User user = User(
         uid: res['_id'],
         name: res['name'],
         phone: res['phone'],
         email: "",
-        avatar: avatar,
+        avatar: avatar.path,
       );
-      print(user.toMap());
+      print("user from model :- ${user.toMap()}");
       await AuthSrevice().setlogin(user);
+      print(await AuthSrevice().islogin());
     } else {
       isclecked.value = false;
     }
