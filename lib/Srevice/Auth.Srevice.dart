@@ -14,7 +14,16 @@ class AuthSrevice {
 
   Future<void> logout() async {
     await APICacheManager().deleteCache("user");
-    Get.put(SplashController());
+    SplashController().onInit();
+  }
+
+  Future<void> setdbinfo(final dbinfo) async {
+    print("set DB info :- ${dbinfo}");
+    APICacheDBModel cacheDBModel = APICacheDBModel(
+      key: "dbinfo",
+      syncData: jsonEncode(dbinfo),
+    );
+    await APICacheManager().addCacheData(cacheDBModel);
   }
 
   Future<void> setlogin(User user) async {
@@ -24,7 +33,7 @@ class AuthSrevice {
       syncData: jsonEncode(user.toMap()),
     );
     await APICacheManager().addCacheData(cacheDBModel);
-    Get.put(SplashController());
+    SplashController().onInit();
     DBcontroller().Createdb();
   }
 
@@ -33,10 +42,8 @@ class AuthSrevice {
     if (user.key.isNotEmpty) {
       final cachedata = jsonDecode(user.syncData);
       return User(
-          uid: cachedata['uid'],
           phone: cachedata['phone'],
           name: cachedata['name'],
-          email: cachedata['email'],
           avatar: cachedata['avatar']);
     }
   }

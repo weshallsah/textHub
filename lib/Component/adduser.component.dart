@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:texthub/Controller/AddUser.controller.dart';
+import 'package:texthub/Controller/nav.controller.dart';
+import 'package:texthub/DB/controller/DB.controller.dart';
 
 class Adduser extends StatelessWidget {
-  final content;
-  final avatar;
-  final phone;
-  const Adduser({super.key, this.content, this.avatar, this.phone});
+  final users;
+  final NavController navController;
+  Adduser({super.key, this.users, required this.navController});
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +34,15 @@ class Adduser extends StatelessWidget {
             child: Container(
               height: 500,
               child: ListView.builder(
-                itemCount: content.length,
+                itemCount: users.length,
                 itemBuilder: (context, index) {
-                  print(content[index].phones);
-                  return UserCard(
-                    user: content[index],
-                    avatar: avatar[content[index].id],
-                    phone: phone[content[index].id],
+                  // print(users[index].phones);
+                  return InkWell(
+                    onTap: () {
+                      // DBcontroller().Createdb();
+                      navController.adduser(users[index]);
+                    },
+                    child: UserCard(user: users[index]),
                   );
                 },
               ),
@@ -51,9 +56,7 @@ class Adduser extends StatelessWidget {
 
 class UserCard extends StatelessWidget {
   final user;
-  final avatar;
-  final phone;
-  const UserCard({super.key, this.user, this.avatar, this.phone});
+  const UserCard({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +71,8 @@ class UserCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30,
-            foregroundImage: avatar != null ? FileImage(avatar) : null,
-            child: avatar == null
+            foregroundImage: user.avatar != "" ? FileImage(user.avatar) : null,
+            child: user.avatar == ""
                 ? SvgPicture.asset(
                     'assets/svg/userAvatar.svg',
                     height: MediaQuery.of(context).size.height <= 700
@@ -86,7 +89,7 @@ class UserCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                user.displayName,
+                user.name,
                 style: TextStyle(
                   fontSize: 18,
                   wordSpacing: 1,
@@ -94,7 +97,7 @@ class UserCard extends StatelessWidget {
                 ),
               ),
               Text(
-                "${phone}",
+                "${user.phone}",
                 style: TextStyle(
                   fontSize: 15,
                   wordSpacing: 1,

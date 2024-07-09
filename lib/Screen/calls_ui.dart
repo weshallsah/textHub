@@ -18,12 +18,8 @@ class Calls extends StatelessWidget {
               vertical: MediaQuery.of(context).size.height * 0.005,
             ),
             decoration: BoxDecoration(
-              border: Border.symmetric(
-                horizontal: BorderSide(
-                  color: Colors.grey
-                )
-              )
-            ),
+                border: Border.symmetric(
+                    horizontal: BorderSide(color: Colors.grey))),
             child: Text(
               "Call logs",
               style: TextStyle(
@@ -51,13 +47,13 @@ class Calls extends StatelessWidget {
                           child: Row(
                             children: [
                               CircleAvatar(
-                                radius: 35,
+                                radius: 30,
                                 foregroundImage: NetworkImage(
                                   "https://b.fssta.com/uploads/application/soccer/headshots/713.png",
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.05,
+                                width: MediaQuery.of(context).size.width * 0.04,
                               ),
                               Text(
                                 "Weshallsah",

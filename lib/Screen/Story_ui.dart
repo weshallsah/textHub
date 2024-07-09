@@ -29,7 +29,7 @@ class Story extends StatelessWidget {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        radius: 35,
+                        radius: 30,
                         foregroundImage: NetworkImage(
                           "https://b.fssta.com/uploads/application/soccer/headshots/713.png",
                         ),
@@ -98,7 +98,7 @@ class Story extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.035,
                         ),
                         CircleAvatar(
-                          radius: 35,
+                          radius: 30,
                           // foregroundImage:
                           child: SvgPicture.asset(
                             fit: BoxFit.contain,

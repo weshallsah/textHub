@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:texthub/Component/Loading.component.dart';
 import 'package:texthub/Controller/splash.controller.dart';
 
-void main() {
+void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }

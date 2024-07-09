@@ -12,7 +12,6 @@ class Profilecontroller extends GetxController {
     // TODO: implement onInit
     super.onInit();
     User? user = await AuthSrevice().getuser();
-    print(user?.toMap());
     name.value = user!.name;
     avatar = File(user.avatar);
   }

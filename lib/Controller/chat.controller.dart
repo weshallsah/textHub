@@ -1,25 +1,39 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:texthub/DB/controller/DB.controller.dart';
+import 'package:texthub/DB/model/chatroom.model.dart';
+import 'package:texthub/DB/model/user.model.dart';
+import 'package:texthub/Srevice/Auth.Srevice.dart';
 
 class ChatController extends GetxController {
   RxList chat = [].obs;
   late IO.Socket socket;
   RxBool ismenu = false.obs;
   TextEditingController message = TextEditingController();
+  User friend;
+  ChatController(this.socket, this.friend);
+  late final user;
+  void getchats() async {
+    try {
+      chat = await DBcontroller().fetchChats(friend);
+      print("chat fetchs :- ${chat}");
+    } catch (e) {
+      print("error :- ${e}");
+    }
+  }
+
   @override
   void onInit() async {
     // TODO: implement onInit
+    user = await AuthSrevice().getuser();
+    getchats();
     super.onInit();
-    socket = await IO.io(
-      "https://zk29l5cf-9000.inc1.devtunnels.ms/",
-      // "http://10.0.2.2:9000/",
-      <String, dynamic>{
-        "autoConnect": true,
-        'transports': ['websocket'],
-      },
-    );
+    print(socket);
     final res = await socket.connect();
     print("res :- ${socket}");
     socket.onConnect((_) {
@@ -28,20 +42,29 @@ class ChatController extends GetxController {
     socket.onDisconnect((_) => print('Connection Disconnection'));
     socket.onConnectError((err) => print(err));
     socket.onError((err) => print(err));
-    socket.emit("joinchat", {"phone": 9511286245});
+    // print(user.phone);
     socket.on("message", (data) {
-      chat.value.insert(0, data);
-      print(data);
-      print(chat.value[0]);
-      print(chat.length);
+      // print(data);
+      // for (var element in data) {
+      //   DBcontroller().InsertChart(Chat(element._id, element.sender,
+      //       element.message, element.createdAt, element.receiver));
+      // }
       chat.refresh();
+    });
+    socket.on("ackrequest", (data) {
+      print("acknowlegment is here");
+      socket.emit("ackresponse", "yes im ready");
     });
   }
 
   void send() {
+    print(user);
+    print(message.text);
+    print(friend);
     socket.emit("chat", {
-      "phone": 9322297210,
-      "message": message.text,
+      "sender": user.phone,
+      "receiver": friend.phone,
+      "message": message.text
     });
     message.clear();
   }

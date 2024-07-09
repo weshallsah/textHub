@@ -132,11 +132,14 @@ class VerifyOTP extends StatelessWidget {
                             fontSize: 20,
                             letterSpacing: 5,
                           ),
+                          // focusNode: FocusScopeNode(),
                           onChanged: (value) {
-                            print("value :- ${value}");
+                            // print("value :- ${value}")
                             if (value != "") {
-                              if (index != 5) {
-                                controller.otps.add(value);
+                              if (index <= 5) {
+                                // if (value == "") {
+                                  controller.otps.add(value);
+                                // }
                                 FocusScope.of(context).nextFocus();
                               }
                             } else {

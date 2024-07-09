@@ -1,15 +1,37 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:get/state_manager.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:texthub/Controller/chat.controller.dart';
+import 'package:texthub/DB/model/user.model.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatRoom extends StatelessWidget {
-  ChatRoom({super.key});
-  final ChatController chatController = Get.put(ChatController());
+  User user;
+  IO.Socket socket;
+  File? avatar;
+  late ChatController chatController;
+  ChatRoom(this.user, this.socket, {super.key}) {
+    chatController = Get.put(ChatController(socket, user));
+    createavatar();
+  }
+  void createavatar() async {
+    if (user.avatar != "") {
+      final temp = await getTemporaryDirectory();
+      avatar = await File("${temp.path}/${user.phone}.png").create();
+      avatar?.writeAsBytesSync(user.avatar as Uint8List);
+    }
+  }
+
+  // final
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -29,15 +51,21 @@ class ChatRoom extends StatelessWidget {
               ),
             ),
             CircleAvatar(
-              radius: (size.height * 0.06) / 2,
-              foregroundImage: NetworkImage(
-                "https://b.fssta.com/uploads/application/soccer/headshots/713.png",
-              ),
+              radius: (size.height * 0.055) / 2,
+              foregroundImage: avatar != null ? FileImage(avatar!) : null,
+              child: user.avatar == null
+                  ? SvgPicture.asset(
+                      'assets/svg/userAvatar.svg',
+                      height: MediaQuery.of(context).size.height <= 700
+                          ? (MediaQuery.of(context).size.height * 0.13)
+                          : (MediaQuery.of(context).size.height * 0.163),
+                    )
+                  : null,
             ),
           ],
         ),
         title: Text(
-          "Username",
+          "${user.name}",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
@@ -73,7 +101,7 @@ class ChatRoom extends StatelessWidget {
                     builder: (controller) {
                       return Obx(
                         () => ListView.builder(
-                          itemCount: controller.chat.value.length??0,
+                          itemCount: controller.chat.value.length ?? 0,
                           itemBuilder: (context, index) {
                             return Column(
                               crossAxisAlignment: index % 2 == 0

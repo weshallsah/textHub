@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:texthub/Controller/nav.controller.dart';
+import 'package:texthub/DB/controller/DB.controller.dart';
 import 'package:texthub/Screen/Home_ui.dart';
 
 class Nav extends StatelessWidget {
@@ -25,26 +27,25 @@ class Nav extends StatelessWidget {
             builder: (controller) {
               switch (controller.current.value) {
                 case "Chat":
-                  return GetBuilder<NavController>(
-                    builder: (controller) {
-                      return Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-
-                            },
-                            icon: Icon(Icons.archive_outlined),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              controller.adduser();
-                            },
-                            icon: Icon(Icons.person_add_alt),
-                          ),
-                        ],
-                      );
-                    }
-                  );
+                  return GetBuilder<NavController>(builder: (controller) {
+                    return Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            // DBcontroller().InsertUser();
+                            DBcontroller().fetchusers();
+                          },
+                          icon: Icon(Icons.archive_outlined),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            controller.userlist(navController);
+                          },
+                          icon: Icon(Icons.person_add_alt),
+                        ),
+                      ],
+                    );
+                  });
                 default:
                   return IconButton(
                     onPressed: () {},
@@ -58,7 +59,17 @@ class Nav extends StatelessWidget {
         ],
       ),
       body: GetBuilder<NavController>(
-        builder: (controller) => controller.loadpage(),
+        builder: (controller) {
+          return Obx(() {
+            // print(controller.issocket.value);
+            if (controller.issocket.value) {
+              return Home(controller.socket,controller.db);
+            }
+            return Center(
+              child: LottieBuilder.asset("assets/lottie/Loading.json"),
+            );
+          });
+        },
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
